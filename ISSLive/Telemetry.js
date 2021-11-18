@@ -1,5 +1,5 @@
 //require(["LightstreamerClient","Subscription","StaticGrid"],function(LightstreamerClient,Subscription,StaticGrid) {
-    var lsClient = new LightstreamerClient("http://push.lightstreamer.com","ISSLIVE");
+    var lsClient = new LightstreamerClient("https://push.lightstreamer.com","ISSLIVE");
     lsClient.connectionOptions.setSlowingEnabled(false);
 
     // USLAB000018: US Current Local Vertical Local Horizontal (LVLH) Attitude Quaternion Component 0
