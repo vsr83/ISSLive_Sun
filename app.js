@@ -35,6 +35,9 @@ var fragmentShaderSource = `#version 300 es
 precision highp float;
 
 #define PI 3.1415926538
+#define A 6378137.0
+#define B 6356752.314245
+#define E 0.081819190842965
 #define R_EARTH 6371000.0
 
 // our texture
@@ -75,10 +78,13 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     float latitude = (uv.y * 180.0) - 90.0;
 
 
-    // Surface coordinates. TODO: WGS84.
-    float xECEF = R_EARTH * cos(deg2rad(latitude)) * cos(deg2rad(longitude));
-    float yECEF = R_EARTH * cos(deg2rad(latitude)) * sin(deg2rad(longitude));
-    float zECEF = R_EARTH * sin(deg2rad(latitude));
+    // Surface coordinates.
+    float sinLat = sin(deg2rad(latitude));
+    float N = A / sqrt(1.0 - E*E*sinLat*sinLat);
+
+    float xECEF = N * cos(deg2rad(latitude)) * cos(deg2rad(longitude));
+    float yECEF = N * cos(deg2rad(latitude)) * sin(deg2rad(longitude));
+    float zECEF = (1.0 - E*E) * N * sin(deg2rad(latitude));
     float normECEF = sqrt(xECEF * xECEF + yECEF * yECEF + zECEF * zECEF); 
 
     float xDiff = u_iss_x - xECEF;
@@ -563,10 +569,11 @@ function yToLat(y)
     let osv_ECEF = Frames.osvJ2000ToECEF(ISS.osvProp);
     ISS.r_ECEF = osv_ECEF.r;
     ISS.v_ECEF = osv_ECEF.v;
-    // TODO: WGS84:
-    ISS.alt = MathUtils.norm(ISS.r_ECEF) - 6371000;
-    ISS.lon = MathUtils.atan2d(ISS.r_ECEF[1], ISS.r_ECEF[0]);
-    ISS.lat = MathUtils.rad2Deg(Math.asin(ISS.r_ECEF[2] / MathUtils.norm(ISS.r_ECEF)));
+    wgs84 = Coordinates.cartToWgs84(ISS.r_ECEF);
+
+    ISS.alt = wgs84.h; //MathUtils.norm(ISS.r_ECEF) - 6371000;
+    ISS.lon = wgs84.lon;//MathUtils.atan2d(ISS.r_ECEF[1], ISS.r_ECEF[0]);
+    ISS.lat = wgs84.lat;//MathUtils.rad2Deg(Math.asin(ISS.r_ECEF[2] / MathUtils.norm(ISS.r_ECEF)));
 
     period = Kepler.computePeriod(ISS.kepler.a, ISS.kepler.mu);
 
