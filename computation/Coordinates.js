@@ -107,7 +107,7 @@ Coordinates.cartToWgs84 = (r) => {
     let b = 6356752.314245;
     let e = Math.sqrt((a*a - b*b) / (a*a));
     
-    let lat = Math.atan(r[2]/((1 - e*e)*p));
+    let lat = Coordinates.rad2Deg(Math.atan(r[2]/((1 - e*e)*p)));
 
     let h = 0;
     for (let iter = 0; iter < 5; iter++)

@@ -51,7 +51,7 @@ TimeConversions.computeJulianTime = function(d)
 }
 
 /**
- * Compute sidereal time.
+ * Compute Greenwich Apparent Sidereal Time (GAST).
  * 
  * @param {*} longitude 
  *     Longitude of the observer (in degrees).
@@ -63,13 +63,45 @@ TimeConversions.computeJulianTime = function(d)
  */
 TimeConversions.computeSiderealTime = function(longitude, JD, JT)
 {
-    JDref = Math.ceil(this.computeJulianDay(2000, 1, 1));
-    tfac = (JD - JDref) / 36525.0
+    let JDmin = Math.floor(JT) - 0.5;
+    let JDmax = Math.floor(JT) + 0.5;
+    let JD0 = 0;
+    if (JT > JDmin)
+    {
+        JD0 = JDmin;
+    }
+    if (JT > JDmax)
+    {
+        JD0 = JDmax;
+    }
 
-    LST = 100.46061837 + 36000.770053608 * tfac + 0.000387933 * tfac * tfac 
-        + 1.00273790935 * (JT - JD) * 360.0 + longitude;
+    // Julian time at
+    let epochJ2000 = 2451545.0;
+    // UT1 time.
+    let H = (JT - JD0) * 24.0;
+    let D = JT - epochJ2000;
+    let D0 = JD0 - epochJ2000;
+    let T = D / 36525.0;
+
+    // Mean sidereal time.
+    let GMST = ((6.69737455833333 + 0.06570982441908 * D0  + 1.00273790935 * H + 0.000026 * (T*T))) * 15.0;
+    // Nutation parameters:
+    let eps_m = 23.439291 - 0.0130111 * T - 1.64E-07 * (T*T) + 5.04E-07 * (T*T*T);
+    let L = 280.4665 + 36000.7698 * T;
+    let dL = 218.3165 + 481267.8813 * T;
+    let Omega = 125.04452 - 1934.136261 * T;
     
-    return LST;
+    let dPsi = -17.20 * MathUtils.sind(Omega) - 1.32 * MathUtils.sind(2.0 * L) 
+             - 0.23 * MathUtils.sind(2.0 * dL) + 0.21 * MathUtils.sind(2.0 * Omega);
+    let dEps = 9.20 * MathUtils.cosd(Omega) + 0.57 * MathUtils.cosd(2.0 * L) 
+             + 0.10 * MathUtils.cosd(2.0 * dL) - 0.09 * MathUtils.cosd(2.0 * Omega);
+
+    dPsi = dPsi * (1/3600);
+    dEps = dEps * (1/3600);
+
+    GAST = (GMST + dPsi * MathUtils.cosd(eps_m+dEps) + longitude) % 360.0;
+
+    return GAST;
 }
 
 /**

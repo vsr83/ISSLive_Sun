@@ -1,21 +1,5 @@
-//require(["LightstreamerClient","Subscription","StaticGrid"],function(LightstreamerClient,Subscription,StaticGrid) {
-    var lsClient = new LightstreamerClient("https://push.lightstreamer.com","ISSLIVE");
+var lsClient = new LightstreamerClient("https://push.lightstreamer.com","ISSLIVE");
     lsClient.connectionOptions.setSlowingEnabled(false);
-
-    // USLAB000018: US Current Local Vertical Local Horizontal (LVLH) Attitude Quaternion Component 0
-    // USLAB000019: US Current Local Vertical Local Horizontal (LVLH) Attitude Quaternion Component 1
-    // USLAB000020: US Current Local Vertical Local Horizontal (LVLH) Attitude Quaternion Component 2
-    // USLAB000021: US Current Local Vertical Local Horizontal (LVLH) Attitude Quaternion Component 3
-    // USLAB000022: US Attitude Roll Error (deg)
-    // USLAB000023: US Attitude Pitch Error (deg)
-    // USLAB000024: US Attitude Yaw Error (deg)
-    // USLAB000025: US Inertial Attitude Rate X (deg/s)
-    // USLAB000026: US Inertial Attitude Rate Y (deg/s)
-    // USLAB000027: US Inertial Attitude Rate Z (deg/s)
-    // USLAB000028: US Commanded Attitude Quaternion Component 0
-    // USLAB000029: US Commanded Attitude Quaternion Component 1
-    // USLAB000030: US Commanded Attitude Quaternion Component 2
-    // USLAB000031: US Commanded Attitude Quaternion Component 3   
 
     // USLAB000032: US Guidance, Navigation and Control (GNC) J2000 Propagated State Vector - X (km)
     // USLAB000033: US Guidance, Navigation and Control (GNC) J2000 Propagated State Vector - Y (km)
@@ -33,40 +17,12 @@
                lon : 0, 
                lat : 0};
 
-    function updateKepler(kepler)
-    {
-    }
+    // 2021-11-19T00:48:00.000 1177.728237468290 5164.721874219340 4253.469200418660 -5.31709062754173 4.18055793285909 -3.60015717277952
+    // 2021-11-19T01:24:00.000 -3965.751738576390 -1516.756797548700 -5313.467867110320 3.16262545363373 -6.95629150850218 -0.37867153148092
 
-    function updateKeplerInt(kepler)
-    {
-    }
-
-    /*
-    setInterval(function()
-    {
-        if (MathUtils.norm(ISS.osv.r) == 0)
-        {
-            return;
-        }
-
-        console.log(ISS.osv.ts);
-        ISS.kepler = Kepler.osvToKepler(ISS.osv.r, ISS.osv.v, ISS.osv.ts);
-        
-        updateKepler(ISS.kepler);
-        let now = new Date();
-
-        console.log(ISS.kepler.ts);
-        let osvProp = Kepler.propagate(ISS.kepler, now);
-        let kepler_updated = Kepler.osvToKepler(osvProp.r, osvProp.v, osvProp.ts);
-        updateKeplerInt(kepler_updated);
-
-        let osv_ECEF = Frames.osvJ2000ToECEF(osvProp);
-        let r_ECEF = osv_ECEF.r;
-        ISS.lon = MathUtils.atan2d(r_ECEF[1], r_ECEF[0]);
-        ISS.lat = MathUtils.rad2Deg(Math.asin(r_ECEF[2] / MathUtils.norm(r_ECEF)));
-        console.log(ISS.lon + " " +  ISS.lat);
-    }, 100);
-    */
+    ISS.osv.r = [-4228282.012, 4080666.827, -3421191.697];
+    ISS.osv.v = [-1904.50887, -5821.53009, -4594.77013];
+    ISS.osv.ts = new Date("November 20, 2021 19:28:04");
 
     var sub = new Subscription("MERGE",["USLAB000032", "USLAB000033", "USLAB000034", 
     "USLAB000035", "USLAB000036", "USLAB000037"], ["TimeStamp","Value"]);
@@ -115,7 +71,5 @@
         {
             ISS.osv.v[2] = parseFloat(update.getValue("Value"));
         }
-        //updateOsv(osv.r, osv.v);
     }
-    });
-//});
+});

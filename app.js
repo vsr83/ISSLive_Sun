@@ -252,6 +252,7 @@ function createGui()
         this.deltaDays = 0;
         this.deltaHours = 0;
         this.deltaMins = 0;
+        this.deltaSecs = 0;
         this.showLocal = false;
         this.showUtc = false;
         this.showJulian = false;
@@ -306,10 +307,12 @@ function createGui()
     let deltaDayControl = timeFolder.add(guiControls, 'deltaDays', -185, 185, 1).onChange(requestFrameWithSun);
     let deltaHourControl = timeFolder.add(guiControls, 'deltaHours', -12, 12, 1).onChange(requestFrameWithSun);
     let deltaMinuteControl = timeFolder.add(guiControls, 'deltaMins', -30, 30, 1).onChange(requestFrameWithSun);
+    let deltaSecControl = timeFolder.add(guiControls, 'deltaSecs', -30, 30, 1).onChange(requestFrameWithSun);
     timeFolder.add({reset:function()
         {
             var resetDate = new Date();
             deltaDayControl.setValue(0);
+            deltaSecControl.setValue(0);
             deltaMinuteControl.setValue(0);
             deltaHourControl.setValue(0);
             yearControl.setValue(resetDate.getFullYear());
@@ -950,7 +953,11 @@ function update()
     + 24 * 3600 * 1000 * guiControls.deltaDays
     + 3600 * 1000 * guiControls.deltaHours
     + 60 * 1000 * guiControls.deltaMins
+    + 1000 * guiControls.deltaSecs
     + dateDelta);
+    
+
+    //today = ISS.osv.ts;
 
     julianTimes = TimeConversions.computeJulianTime(today);
     JD = julianTimes.JD;
