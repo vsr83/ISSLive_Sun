@@ -1054,10 +1054,10 @@ function update()
         if (guiControls.showTelemetry)
         {
             caption = caption + "OSV Timestamp: " + ISS.osv.ts + "<br>";
-            caption = caption + "OSV Position (m, GM2000) [" 
+            caption = caption + "OSV Position (m, J2000) [" 
             + ISS.osv.r[0].toFixed(5) + " " + ISS.osv.r[1].toFixed(5) + " " + ISS.osv.r[2].toFixed(5)
             + "]<br>";
-            caption = caption + "OSV Velocity (m, GM2000) [" 
+            caption = caption + "OSV Velocity (m, J2000) [" 
             + ISS.osv.v[0].toFixed(5) + " " + ISS.osv.v[1].toFixed(5) + " " + ISS.osv.v[2].toFixed(5)
             + "]<br>";
         }
@@ -1065,10 +1065,10 @@ function update()
         if (guiControls.showOsvGM2000)
         {
             caption = caption + "Propagated: " + ISS.osvProp.ts + "<br>";
-            caption = caption + "Position (m, GM2000) [" 
+            caption = caption + "Position (m, J2000) [" 
             + ISS.osvProp.r[0].toFixed(5) + " " + ISS.osvProp.r[1].toFixed(5) + " " + ISS.osvProp.r[2].toFixed(5)
             + "]<br>";
-            caption = caption + "Velocity (m/s, GM2000) [" 
+            caption = caption + "Velocity (m/s, J2000) [" 
             + ISS.osvProp.v[0].toFixed(5) + " " + ISS.osvProp.v[1].toFixed(5) + " " + ISS.osvProp.v[2].toFixed(5)
             + "]<br>";
         }
