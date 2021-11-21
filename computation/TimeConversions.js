@@ -119,6 +119,8 @@ TimeConversions.nutData = [
  * Implementation of the IAU 1980 Nutation Model.
  * 
  * @param {*} T 
+ *      Julian centuries from J2000.0.
+ * @returns The nutation parameters eps, deps and dpsi (degrees).
  */
 TimeConversions.nutationTerms = function(T)
 {
