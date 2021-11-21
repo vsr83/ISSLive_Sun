@@ -79,7 +79,7 @@ Frames.osvJ2000ToECEF = function(osv_J2000)
     let vCEP = MathUtils.rotZ(MathUtils.rotX(MathUtils.rotZ(osv_J2000.v, zeta), -nu), z);
 
     // Apply the Nutation Matrix (A.24):
-    let nutPar = TimeConversions.nutationTerms(T);
+    let nutPar = Nutation.nutationTerms(T);
     rCEP = MathUtils.rotX(MathUtils.rotZ(MathUtils.rotX(rCEP, -nutPar.eps), nutPar.dpsi), 
             nutPar.eps + nutPar.deps);
     vCEP = MathUtils.rotX(MathUtils.rotZ(MathUtils.rotX(vCEP, -nutPar.eps), nutPar.dpsi), 

@@ -271,6 +271,9 @@ function createGui()
         this.timeHour = initDate.getHours();
         this.timeMinute = initDate.getMinutes();
         this.timeSecond = initDate.getSeconds();
+        this.GitHub = function() {
+            window.open("https://github.com/vsr83/ISSLive_Sun", "_blank").focus();
+        };
     }
 
     gui = new dat.GUI();
@@ -338,6 +341,8 @@ function createGui()
     textFolder.add(guiControls, 'showOsvECEF').onChange(requestFrame);
     textFolder.add(guiControls, 'showIssLocation').onChange(requestFrame);
     textFolder.add(guiControls, 'showIssElements').onChange(requestFrame);
+
+    gui.add(guiControls, 'GitHub');
 }
 
 /**
@@ -956,7 +961,6 @@ function update()
     + 1000 * guiControls.deltaSecs
     + dateDelta);
     
-
     //today = ISS.osv.ts;
 
     julianTimes = TimeConversions.computeJulianTime(today);
