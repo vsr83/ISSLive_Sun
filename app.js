@@ -186,6 +186,9 @@ var drawing = false;
 // Delta time (ms) from configuration of date and time.
 var dateDelta = 0;
 
+// Hold OSV controls.
+var osvControls = {};
+
 // Initialize after images have been loaded.
 imageDay.onload = function() 
 {
@@ -274,6 +277,21 @@ function createGui()
         this.GitHub = function() {
             window.open("https://github.com/vsr83/ISSLive_Sun", "_blank").focus();
         };
+
+        this.enableTelemetry = true;
+        this.enableClock = true;
+        this.osvYear = 2021;
+        this.osvMonth = 11;
+        this.osvDay = 22;
+        this.osvHour = 0;
+        this.osvMinute = 43;
+        this.osvSecond = 0;
+        this.osvX = 0.0;
+        this.osvY = 0.0;
+        this.osvZ = 0.0;
+        this.osvVx = 0.0;
+        this.osvVy = 0.0;
+        this.osvVz = 0.0;
     }
 
     gui = new dat.GUI();
@@ -300,7 +318,7 @@ function createGui()
     
     let timeFolder = gui.addFolder('Time');
 
-    let yearControl = timeFolder.add(guiControls, 'dateYear', 1970, 2050, 1).onChange(configureTime);
+    let yearControl = timeFolder.add(guiControls, 'dateYear', 1980, 2040, 1).onChange(configureTime);
     let monthControl = timeFolder.add(guiControls, 'dateMonth', 1, 12, 1).onChange(configureTime);
     let dayControl = timeFolder.add(guiControls, 'dateDay', 1, 31, 1).onChange(configureTime);
     let hourControl = timeFolder.add(guiControls, 'timeHour', 0, 24, 1).onChange(configureTime);
@@ -341,6 +359,22 @@ function createGui()
     textFolder.add(guiControls, 'showOsvECEF').onChange(requestFrame);
     textFolder.add(guiControls, 'showIssLocation').onChange(requestFrame);
     textFolder.add(guiControls, 'showIssElements').onChange(requestFrame);
+
+    let dataFolder = gui.addFolder('Source');
+    dataFolder.add(guiControls, 'enableTelemetry').onChange(requestFrame);
+    dataFolder.add(guiControls, 'enableClock').onChange(requestFrame);
+    osvControls.osvYear = dataFolder.add(guiControls, 'osvYear', 1980, 2040, 1).onChange(requestFrame);
+    osvControls.osvMonth = dataFolder.add(guiControls, 'osvMonth', 1, 12, 1).onChange(requestFrame);
+    osvControls.osvDay = dataFolder.add(guiControls, 'osvDay', 1, 31, 1).onChange(requestFrame);
+    osvControls.osvHour = dataFolder.add(guiControls, 'osvHour', 0, 23, 1).onChange(requestFrame);
+    osvControls.osvMinute = dataFolder.add(guiControls, 'osvMinute', 0, 59, 1).onChange(requestFrame);
+    osvControls.osvSecond = dataFolder.add(guiControls, 'osvSecond', 0, 59, 1).onChange(requestFrame);
+    osvControls.osvX = dataFolder.add(guiControls, 'osvX', -10000, 10000, 0.000001).onChange(requestFrame);
+    osvControls.osvY = dataFolder.add(guiControls, 'osvY', -10000, 10000, 0.000001).onChange(requestFrame);
+    osvControls.osvZ = dataFolder.add(guiControls, 'osvZ', -10000, 10000, 0.000001).onChange(requestFrame);
+    osvControls.osvVx = dataFolder.add(guiControls, 'osvVx', -10000, 10000, 0.000001).onChange(requestFrame);
+    osvControls.osvVy = dataFolder.add(guiControls, 'osvVy', -10000, 10000, 0.000001).onChange(requestFrame);
+    osvControls.osvVz = dataFolder.add(guiControls, 'osvVz', -10000, 10000, 0.000001).onChange(requestFrame);
 
     gui.add(guiControls, 'GitHub');
 }
@@ -954,7 +988,44 @@ function update()
     canvasJs.height = document.documentElement.clientHeight;
 
     // Compute Julian time.
-    var today = new Date(new Date().getTime() 
+    var dateNow = new Date();
+    if (!guiControls.enableClock)
+    {
+        dateNow = new Date(guiControls.osvYear, guiControls.osvMonth-1, guiControls.osvDay, 
+            guiControls.osvHour, guiControls.osvMinute, guiControls.osvSecond);
+    }
+    if (guiControls.enableTelemetry)
+    {
+        ISS.osv = ISS.osvIn;
+
+        console.log(dateNow.getFullYear());
+        //osvControls.osvYear.setValue(dateNow.getFullYear());
+        osvControls.osvMonth.setValue(ISS.osv.ts.getMonth() + 1);
+        osvControls.osvDay.setValue(ISS.osv.ts.getDate());
+        osvControls.osvHour.setValue(ISS.osv.ts.getHours());
+        osvControls.osvMinute.setValue(ISS.osv.ts.getMinutes());
+        osvControls.osvSecond.setValue(ISS.osv.ts.getSeconds());
+        osvControls.osvX.setValue(ISS.osv.r[0] * 0.001);
+        osvControls.osvY.setValue(ISS.osv.r[1] * 0.001);
+        osvControls.osvZ.setValue(ISS.osv.r[2] * 0.001);
+        osvControls.osvVx.setValue(ISS.osv.v[0]);
+        osvControls.osvVy.setValue(ISS.osv.v[1]);
+        osvControls.osvVz.setValue(ISS.osv.v[2]);
+    }
+    else
+    {
+        ISS.osv = {r: [
+            osvControls.osvX.getValue() * 1000.0, 
+            osvControls.osvY.getValue() * 1000.0, 
+            osvControls.osvZ.getValue() * 1000.0], 
+                   v: [
+            osvControls.osvVx.getValue(), 
+            osvControls.osvVy.getValue(), 
+            osvControls.osvVz.getValue()], 
+                ts: dateNow}
+    }
+
+    var today = new Date(dateNow.getTime()
     + 24 * 3600 * 1000 * guiControls.deltaDays
     + 3600 * 1000 * guiControls.deltaHours
     + 60 * 1000 * guiControls.deltaMins
