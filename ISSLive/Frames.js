@@ -8,10 +8,6 @@ var Frames = {};
  * 
  * @param {*} osv_J2000
  *      OSV in J2000 frame. 
- * @param {*} JD 
- *      Julian date.
- * @param {*} JT 
- *      Julian time.
  * @returns OSV in ECEF frame.
  */
 Frames.osvJ2000ToECEF = function(osv_J2000)
@@ -40,14 +36,18 @@ Frames.osvJ2000ToECEF = function(osv_J2000)
     osv_ECEF.ts = osv_J2000.ts;
     // We do not take Nutation nor polar movement into account. 
     let v_rot = MathUtils.rotZ(vCEP, -LST);
-    let v_ECEF_x = v_rot[0] + (Math.PI / 180.0) * dLSTdt * 
-        (-MathUtils.sind(LST) * osv_ECEF.r[0] + MathUtils.cosd(LST) * osv_ECEF.r[1]);
-    let v_ECEF_y = v_rot[1] + (Math.PI / 180.0) * dLSTdt * 
-        (-MathUtils.cosd(LST) * osv_ECEF.r[0] - MathUtils.sind(LST) * osv_ECEF.r[1]);
-    let v_ECEF_z = v_rot[2];
-    osv_ECEF.v = [v_ECEF_x, v_ECEF_y, v_ECEF_z];
+    let omega = (Math.PI / 180.0) * dLSTdt;
 
-    //console.log(MathUtils.norm(osv_ECEF.v)*3.6);
+    let mat_11 = omega * -MathUtils.sind(LST);
+    let mat_12 = omega * MathUtils.cosd(LST);
+    let mat_21 = omega * -MathUtils.cosd(LST);
+    let mat_22 = omega * -MathUtils.sind(LST);
+
+    let v_ECEF_x = v_rot[0] + mat_11 * osv_CEP.r[0] + mat_12 * osv_CEP.r[1];
+    let v_ECEF_y = v_rot[1] + mat_21 * osv_CEP.r[0] + mat_22 * osv_CEP.r[1];
+    let v_ECEF_z = v_rot[2];
+
+    osv_ECEF.v = [v_ECEF_x, v_ECEF_y, v_ECEF_z];
 
     // Rotation.
     return osv_ECEF;
@@ -58,17 +58,12 @@ Frames.osvJ2000ToECEF = function(osv_J2000)
  * 
  * @param {*} osv_J2000
  *      OSV in J2000 frame. 
- * @param {*} JD 
- *      Julian date.
- * @param {*} JT 
- *      Julian time.
  * @returns OSV in ECEF frame.
  */
  Frames.osvJ2000ToCEP = function(osv_J2000)
  {
     let julian = TimeConversions.computeJulianTime(osv_J2000.ts);
 
-    //let MJD = julian.JT - 2400000.5;
     // IAU 1976 Precession Model
     // (ESA GNSS Data Processing Volume 1 - A2.5.1)
     let T = (julian.JT - 2451545.0)/36525.0;
@@ -80,8 +75,6 @@ Frames.osvJ2000ToECEF = function(osv_J2000)
     // Without precession:   -5844.548  608.649 -3421.168
     // With precession:      -5843.054  574.308 -3429.817
 
-    //let rCEP = osv_J2000.r; 
-    //let vCEP = osv_J2000.v; 
     let rCEP = MathUtils.rotZ(MathUtils.rotX(MathUtils.rotZ(osv_J2000.r, zeta), -nu), z);
     let vCEP = MathUtils.rotZ(MathUtils.rotX(MathUtils.rotZ(osv_J2000.v, zeta), -nu), z);
  
