@@ -85,21 +85,12 @@ TimeConversions.computeSiderealTime = function(longitude, JD, JT)
 
     // Mean sidereal time.
     let GMST = ((6.69737455833333 + 0.06570982441908 * D0  + 1.00273790935 * H + 0.000026 * (T*T))) * 15.0;
-    // Nutation parameters:
-    let eps_m = 23.439291 - 0.0130111 * T - 1.64E-07 * (T*T) + 5.04E-07 * (T*T*T);
-    let L = 280.4665 + 36000.7698 * T;
-    let dL = 218.3165 + 481267.8813 * T;
-    let Omega = 125.04452 - 1934.136261 * T;
-    
-    let dPsi = -17.20 * MathUtils.sind(Omega) - 1.32 * MathUtils.sind(2.0 * L) 
-             - 0.23 * MathUtils.sind(2.0 * dL) + 0.21 * MathUtils.sind(2.0 * Omega);
-    let dEps = 9.20 * MathUtils.cosd(Omega) + 0.57 * MathUtils.cosd(2.0 * L) 
-             + 0.10 * MathUtils.cosd(2.0 * dL) - 0.09 * MathUtils.cosd(2.0 * Omega);
 
-    dPsi = dPsi * (1/3600);
-    dEps = dEps * (1/3600);
-
-    GAST = (GMST + dPsi * MathUtils.cosd(eps_m+dEps) + longitude) % 360.0;
+    // Equation (A.37).
+    let nutTerms = Frames.nutationTerms(T);        
+    const N11 = MathUtils.cosd(nutTerms.dpsi);
+    const N12 = -MathUtils.cosd(nutTerms.eps) * MathUtils.sind(nutTerms.dpsi);
+    GAST = (GMST + MathUtils.atand(N12 / N11) + longitude) % 360.0;
 
     return GAST;
 }

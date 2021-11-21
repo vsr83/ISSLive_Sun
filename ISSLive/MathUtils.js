@@ -50,6 +50,11 @@ MathUtils.atan2d = function(y, x)
     return this.rad2Deg(Math.atan2(y, x));
 }
 
+MathUtils.atand = function(val)
+{
+    return this.rad2Deg(Math.atan(val));
+}
+
 MathUtils.rotX = function(r, deg)
 {
     let x = r[0];
