@@ -18,28 +18,9 @@ Frames.osvJ2000ToECEF = function(osv_J2000)
 {
     let julian = TimeConversions.computeJulianTime(osv_J2000.ts);
 
-    //let MJD = julian.JT - 2400000.5;
-    // IAU 1976 Precession Model
-    // (ESA GNSS Data Processing Volume 1 - A2.5.1)
-    let T = (julian.JT - 2451545.0)/36525.0;
-    let z    = 0.6406161388 * T + 3.0407777777e-04 * T*T + 5.0563888888e-06 *T*T*T;
-    let nu   = 0.5567530277 * T - 1.1851388888e-04 * T*T - 1.1620277777e-05 *T*T*T;
-    let zeta = 0.6406161388 * T + 8.3855555555e-05 * T*T + 4.9994444444e-06 *T*T*T;
-
-    // 1.0450783529629994 0.9071805887406309 1.0444929483923142
-    // 1.6300693823357892 1.045078627452981 0.9071808267086435 1.0444932225749681
-    // 0.21887058077928273 0.14022664601376622 0.12185105935789137 0.140216095818457
-
-    // Astropy:              -5841.9119 584.875 -3429.9779
-    // Without precession:   -5844.548  608.649 -3421.168
-    // With precession:      -5843.054  574.308 -3429.817
-
-    //console.log(T + " " + z + " " + nu + " " + zeta);
-
-    //let rCEP = osv_J2000.r; 
-    //let vCEP = osv_J2000.v; 
-    let rCEP = MathUtils.rotZ(MathUtils.rotX(MathUtils.rotZ(osv_J2000.r, zeta), -nu), z);
-    let vCEP = MathUtils.rotZ(MathUtils.rotX(MathUtils.rotZ(osv_J2000.v, zeta), -nu), z);
+    let osv_CEP = Frames.osvJ2000ToCEP(osv_J2000);
+    let rCEP = osv_CEP.r;
+    let vCEP = osv_CEP.v;
 
     let osv_ECEF = {};
     let dLSTdt = 1.00273790935 * 360.0 / 86400.0;
@@ -85,20 +66,24 @@ Frames.osvJ2000ToECEF = function(osv_J2000)
  */
  Frames.osvJ2000ToCEP = function(osv_J2000)
  {
-     let julian = TimeConversions.computeJulianTime(osv_J2000.ts);
- 
-     let MJD = julian.JT - 2400000.5;
-     // IAU 1976 Precession Model
-     // (ESA GNSS Data Processing Volume 1 - A2.5.1)
-     let T = (MJD - 0.5)/36525.0;
-     let z    = 0.6406161388 * T + 3.0407777777e-04 * T*T + 5.0563888888e-06 *T*T*T;
-     let nu   = 0.5567530277 * T - 1.1851388888e-04 * T*T - 1.1620277777e-05 *T*T*T;
-     let zeta = 0.6406161388 * T + 8.3855555555e-05 * T*T + 4.9994444444e-06 *T*T*T;
- 
-     //let rCEP = osv_J2000.r; 
-     //let vCEP = osv_J2000.v; 
-     let rCEP = MathUtils.rotZ(MathUtils.rotX(MathUtils.rotZ(osv_J2000.r, -90.0 + zeta), -nu), 90.0 + z);
-     let vCEP = MathUtils.rotZ(MathUtils.rotX(MathUtils.rotZ(osv_J2000.v, -90.0 + zeta), -nu), 90.0 + z);
+    let julian = TimeConversions.computeJulianTime(osv_J2000.ts);
+
+    //let MJD = julian.JT - 2400000.5;
+    // IAU 1976 Precession Model
+    // (ESA GNSS Data Processing Volume 1 - A2.5.1)
+    let T = (julian.JT - 2451545.0)/36525.0;
+    let z    = 0.6406161388 * T + 3.0407777777e-04 * T*T + 5.0563888888e-06 *T*T*T;
+    let nu   = 0.5567530277 * T - 1.1851388888e-04 * T*T - 1.1620277777e-05 *T*T*T;
+    let zeta = 0.6406161388 * T + 8.3855555555e-05 * T*T + 4.9994444444e-06 *T*T*T;
+
+    // Astropy:              -5841.9119 584.875 -3429.9779
+    // Without precession:   -5844.548  608.649 -3421.168
+    // With precession:      -5843.054  574.308 -3429.817
+
+    //let rCEP = osv_J2000.r; 
+    //let vCEP = osv_J2000.v; 
+    let rCEP = MathUtils.rotZ(MathUtils.rotX(MathUtils.rotZ(osv_J2000.r, zeta), -nu), z);
+    let vCEP = MathUtils.rotZ(MathUtils.rotX(MathUtils.rotZ(osv_J2000.v, zeta), -nu), z);
  
      let osv_CEP = {r : rCEP, v: vCEP, ts: osv_J2000.ts};
      return osv_CEP;
