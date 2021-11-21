@@ -1,9 +1,10 @@
 /**
- * Static methods for the computation of the Julian and sidereal time.
+ * Implementation of 1980 IAU theory of nutation according to section A.2.5.1 of 
+ * ESA - GNSS Data Processing Vol. 1.
  */
  var Nutation = {};
 
- // ESA - GNSS Data Processing Vol. 1 Table A.2
+ // Table A.2
  // Extracted from https://hpiers.obspm.fr/eop-pc/models/nutations/nut_IAU1980.dat.
  Nutation.nutData = [
      // k_i1 k_i2 k_i3 k_i4 k_i5  Period       A_0j       A_1j       B_0j       B_1j
@@ -126,21 +127,23 @@
  {
      let T2 = T * T;
      let T3 = T2 * T;
+
+     // Obliquity of the ecliptic (A.25).
      let eps = 23.4392911111 - 0.0130041667 * T - 1.6388888889e-07 * T2 + 5.0361111111e-07 * T3;
   
-     // Mean anomaly of the Moon:
+     // Mean anomaly of the Moon (A.26):
      let a_1 = 134.9629813889 + (198.8673980555 * T) + (8.6972222222e-3 * T2) + (1.7777777778e-05 * T3) 
              + (1325.0 * 360.0 * T) % 360.0;
-      // Mean anomaly of the Sun:
+      // Mean anomaly of the Sun (A.27):
      let a_2 = 357.5277233333 + (359.0503400000 * T) - (1.6027777778e-4 * T2) - (3.3333333333e-06 * T3) 
              + (99.0 * 360.0 * T) % 360.0;
-     // Moon's mean argument of latitude:
+     // Moon's mean argument of latitude (A.28):
      let a_3 =  93.2719102778 + ( 82.0175380556 * T) - (0.0036825000000 * T2) + (3.0555555555e-06 * T3)
              + (1342.0 * 360.0 * T) % 360.0;
-     // Moon's mean elongation from the Sun:
+     // Moon's mean elongation from the Sun (A.29):
      let a_4 = 297.8503630555 + (307.1114800000 * T) - (0.0019141666667 * T2) + (5.2777777778e-06 * T3)
              + (1236.0 * 360.0 * T) % 360.0;
-     // Mean longitude of the ascending lunar node:
+     // Mean longitude of the ascending lunar node (A.30):
      let a_5 = 125.0445222222 - (134.1362608333 * T) + (0.0020708333333 * T2) + (2.2222222222e-06 * T3)
              - (5.0 * 360.0 * T) % 360.0;
   
