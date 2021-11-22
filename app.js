@@ -1016,18 +1016,11 @@ function update()
     {
         dateNow = new Date(guiControls.dateYear, parseInt(guiControls.dateMonth)-1, guiControls.dateDay, 
             guiControls.timeHour, guiControls.timeMinute, guiControls.timeSecond);
-        console.log("Year: " + dateNow.getFullYear());
-        console.log("Month: " + dateNow.getMonth() + 1);
-        console.log("Day: " + dateNow.getDay());
-        console.log("Hour: " + dateNow.getHours());
-        console.log("Minute: " + dateNow.getMinutes());
-        console.log(dateNow);
     }
     if (guiControls.enableTelemetry)
     {
         ISS.osv = ISS.osvIn;
 
-        console.log(dateNow.getFullYear());
         //osvControls.osvYear.setValue(dateNow.getFullYear());
         osvControls.osvMonth.setValue(ISS.osv.ts.getMonth() + 1);
         osvControls.osvDay.setValue(ISS.osv.ts.getDate());
@@ -1073,8 +1066,6 @@ function update()
         + 1000 * guiControls.deltaSecs);
     }
 
-    console.log(dateNow);
-    console.log(today);
     
     //today = ISS.osv.ts;
 
