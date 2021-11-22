@@ -188,6 +188,7 @@ var dateDelta = 0;
 
 // Hold OSV controls.
 var osvControls = {};
+var timeControls = {};
 
 // Initialize after images have been loaded.
 imageDay.onload = function() 
@@ -318,30 +319,30 @@ function createGui()
     
     let timeFolder = gui.addFolder('Time');
 
-    let yearControl = timeFolder.add(guiControls, 'dateYear', 1980, 2040, 1).onChange(configureTime);
-    let monthControl = timeFolder.add(guiControls, 'dateMonth', 1, 12, 1).onChange(configureTime);
-    let dayControl = timeFolder.add(guiControls, 'dateDay', 1, 31, 1).onChange(configureTime);
-    let hourControl = timeFolder.add(guiControls, 'timeHour', 0, 24, 1).onChange(configureTime);
-    let minuteControl = timeFolder.add(guiControls, 'timeMinute', 0, 59, 1).onChange(configureTime);
-    let secondControl = timeFolder.add(guiControls, 'timeSecond', 0, 59, 1).onChange(configureTime);
+    timeControls.yearControl = timeFolder.add(guiControls, 'dateYear', 1980, 2040, 1).onChange(configureTime);
+    timeControls.monthControl = timeFolder.add(guiControls, 'dateMonth', 1, 12, 1).onChange(configureTime);
+    timeControls.dayControl = timeFolder.add(guiControls, 'dateDay', 1, 31, 1).onChange(configureTime);
+    timeControls.hourControl = timeFolder.add(guiControls, 'timeHour', 0, 24, 1).onChange(configureTime);
+    timeControls.minuteControl = timeFolder.add(guiControls, 'timeMinute', 0, 59, 1).onChange(configureTime);
+    timeControls.secondControl = timeFolder.add(guiControls, 'timeSecond', 0, 59, 1).onChange(configureTime);
 
-    let deltaDayControl = timeFolder.add(guiControls, 'deltaDays', -185, 185, 1).onChange(requestFrameWithSun);
-    let deltaHourControl = timeFolder.add(guiControls, 'deltaHours', -12, 12, 1).onChange(requestFrameWithSun);
-    let deltaMinuteControl = timeFolder.add(guiControls, 'deltaMins', -30, 30, 1).onChange(requestFrameWithSun);
-    let deltaSecControl = timeFolder.add(guiControls, 'deltaSecs', -30, 30, 1).onChange(requestFrameWithSun);
+    timeControls.deltaDayControl = timeFolder.add(guiControls, 'deltaDays', -185, 185, 1).onChange(requestFrameWithSun);
+    timeControls.deltaHourControl = timeFolder.add(guiControls, 'deltaHours', -12, 12, 1).onChange(requestFrameWithSun);
+    timeControls.deltaMinuteControl = timeFolder.add(guiControls, 'deltaMins', -30, 30, 1).onChange(requestFrameWithSun);
+    timeControls.deltaSecControl = timeFolder.add(guiControls, 'deltaSecs', -30, 30, 1).onChange(requestFrameWithSun);
     timeFolder.add({reset:function()
         {
             var resetDate = new Date();
-            deltaDayControl.setValue(0);
-            deltaSecControl.setValue(0);
-            deltaMinuteControl.setValue(0);
-            deltaHourControl.setValue(0);
-            yearControl.setValue(resetDate.getFullYear());
-            monthControl.setValue(resetDate.getMonth()+1);
-            dayControl.setValue(resetDate.getDate());
-            hourControl.setValue(resetDate.getHours());
-            minuteControl.setValue(resetDate.getMinutes());
-            secondControl.setValue(resetDate.getSeconds());
+            timeControls.deltaDayControl.setValue(0);
+            timeControls.deltaSecControl.setValue(0);
+            timeControls.deltaMinuteControl.setValue(0);
+            timeControls.deltaHourControl.setValue(0);
+            timeControls.yearControl.setValue(resetDate.getFullYear());
+            timeControls.monthControl.setValue(resetDate.getMonth()+1);
+            timeControls.dayControl.setValue(resetDate.getDate());
+            timeControls.hourControl.setValue(resetDate.getHours());
+            timeControls.minuteControl.setValue(resetDate.getMinutes());
+            timeControls.secondControl.setValue(resetDate.getSeconds());
     
             requestFrameWithSun();
         }}, 'reset');
@@ -376,6 +377,28 @@ function createGui()
     osvControls.osvVy = dataFolder.add(guiControls, 'osvVy', -10000, 10000, 0.000001).onChange(requestFrame);
     osvControls.osvVz = dataFolder.add(guiControls, 'osvVz', -10000, 10000, 0.000001).onChange(requestFrame);
 
+    //guiControls.setClockFromOsv =  function()
+    //{
+      //      timeControls.yearControl.setValue(osvControls.osvYear.getValue());
+            //timeControls.monthControl.setValue(osvControls.osvMonth.getValue());
+            //timeControls.dayControl.setValue(osvControls.osvDay.getValue());
+            //timeControls.hourControl.setValue(osvControls.osvHour.getValue());
+            //timeControls.minuteControl.setValue(osvControls.osvMinute.getValue());
+            //timeControls.secondControl.setValue(osvControls.osvSecond.getValue());
+
+            //requestFrameWithSun();
+    //};
+
+    dataFolder.add({setClockFromOsv:function()
+        {
+            timeControls.yearControl.setValue(osvControls.osvYear.getValue());
+            timeControls.monthControl.setValue(osvControls.osvMonth.getValue());
+            timeControls.dayControl.setValue(osvControls.osvDay.getValue());
+            timeControls.hourControl.setValue(osvControls.osvHour.getValue());
+            timeControls.minuteControl.setValue(osvControls.osvMinute.getValue());
+            timeControls.secondControl.setValue(osvControls.osvSecond.getValue());
+        }}, 'setClockFromOsv');
+    
     gui.add(guiControls, 'GitHub');
 }
 
@@ -507,7 +530,7 @@ function requestFrame()
  */
 function configureTime()
 {
-    var newDate = new Date(guiControls.dateYear, guiControls.dateMonth-1, guiControls.dateDay, 
+    var newDate = new Date(guiControls.dateYear, parseInt(guiControls.dateMonth)-1, guiControls.dateDay, 
         guiControls.timeHour, guiControls.timeMinute, guiControls.timeSecond).getTime();
 
     var today = new Date().getTime();
@@ -643,7 +666,7 @@ function yToLat(y)
          let y = latToY(lat);
          //console.log([lon, lat]);
  
-         if (jdDelta != 0 && lonPrev > lon)
+         if (jdDelta != 0 && Math.abs(lonPrev - lon) > 160.0)
          {
              contextJs.stroke();
              contextJs.beginPath();
@@ -682,7 +705,7 @@ function yToLat(y)
          let x = lonToX(lon);
          let y = latToY(lat);
  
-         if (jdDelta != -period && lonPrev > lon)
+         if (jdDelta != -period && Math.abs(lonPrev - lon) > 180.0)
          {
              contextJs.stroke();
              contextJs.beginPath();
@@ -991,8 +1014,14 @@ function update()
     var dateNow = new Date();
     if (!guiControls.enableClock)
     {
-        dateNow = new Date(guiControls.osvYear, guiControls.osvMonth-1, guiControls.osvDay, 
-            guiControls.osvHour, guiControls.osvMinute, guiControls.osvSecond);
+        dateNow = new Date(guiControls.dateYear, parseInt(guiControls.dateMonth)-1, guiControls.dateDay, 
+            guiControls.timeHour, guiControls.timeMinute, guiControls.timeSecond);
+        console.log("Year: " + dateNow.getFullYear());
+        console.log("Month: " + dateNow.getMonth() + 1);
+        console.log("Day: " + dateNow.getDay());
+        console.log("Hour: " + dateNow.getHours());
+        console.log("Minute: " + dateNow.getMinutes());
+        console.log(dateNow);
     }
     if (guiControls.enableTelemetry)
     {
@@ -1025,12 +1054,27 @@ function update()
                 ts: dateNow}
     }
 
-    var today = new Date(dateNow.getTime()
-    + 24 * 3600 * 1000 * guiControls.deltaDays
-    + 3600 * 1000 * guiControls.deltaHours
-    + 60 * 1000 * guiControls.deltaMins
-    + 1000 * guiControls.deltaSecs
-    + dateDelta);
+    var today = null;
+    if (guiControls.enableClock)
+    {
+        today = new Date(dateNow.getTime()
+        + 24 * 3600 * 1000 * guiControls.deltaDays
+        + 3600 * 1000 * guiControls.deltaHours
+        + 60 * 1000 * guiControls.deltaMins
+        + 1000 * guiControls.deltaSecs
+        + dateDelta);
+    }
+    else
+    {
+        today = new Date(dateNow.getTime()
+        + 24 * 3600 * 1000 * guiControls.deltaDays
+        + 3600 * 1000 * guiControls.deltaHours
+        + 60 * 1000 * guiControls.deltaMins
+        + 1000 * guiControls.deltaSecs);
+    }
+
+    console.log(dateNow);
+    console.log(today);
     
     //today = ISS.osv.ts;
 
