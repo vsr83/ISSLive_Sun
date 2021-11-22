@@ -1044,7 +1044,13 @@ function update()
             osvControls.osvVx.getValue(), 
             osvControls.osvVy.getValue(), 
             osvControls.osvVz.getValue()], 
-                ts: dateNow}
+                ts: new Date(osvControls.osvYear.getValue(), 
+                    parseInt(osvControls.osvMonth.getValue())-1, 
+                    osvControls.osvDay.getValue(), 
+                    osvControls.osvHour.getValue(), 
+                    osvControls.osvMinute.getValue(), 
+                    osvControls.osvSecond.getValue())
+                };
     }
 
     var today = null;
