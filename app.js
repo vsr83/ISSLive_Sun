@@ -649,7 +649,9 @@ function yToLat(y)
      contextJs.lineWidth = 2;
      // Draw Sun path.
      let lonPrev = 0;
-     for (jdDelta = 0; jdDelta < period; jdDelta += 10)
+
+     jdStep = period / 1000;
+     for (jdDelta = 0; jdDelta < period; jdDelta += jdStep)
      {
         let deltaDate = new Date(today.getTime() 
         +  1000 * jdDelta);
@@ -689,7 +691,7 @@ function yToLat(y)
      contextJs.strokeStyle = '#aaaaaa';
      // Draw Sun path.
      lonPrev = 0;
-     for (jdDelta = -period; jdDelta < 0; jdDelta += 10)
+     for (jdDelta = -period; jdDelta < 0; jdDelta += jdStep)
      {
         let deltaDate = new Date(today.getTime() 
         +  1000 * jdDelta);
