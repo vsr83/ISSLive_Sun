@@ -75,8 +75,8 @@ Frames.osvJ2000ToECEF = function(osv_J2000)
     let zeta = 0.6406161388 * T + 8.3855555555e-05 * T*T + 4.9994444444e-06 *T*T*T;
 
     // Apply the Precession Matrix (A.22):
-    let rCEP = MathUtils.rotZ(MathUtils.rotX(MathUtils.rotZ(osv_J2000.r, zeta), -nu), z);
-    let vCEP = MathUtils.rotZ(MathUtils.rotX(MathUtils.rotZ(osv_J2000.v, zeta), -nu), z);
+    let rCEP = MathUtils.rotZ(MathUtils.rotY(MathUtils.rotZ(osv_J2000.r, zeta), -nu), z);
+    let vCEP = MathUtils.rotZ(MathUtils.rotY(MathUtils.rotZ(osv_J2000.v, zeta), -nu), z);
 
     // Apply the Nutation Matrix (A.24):
     let nutPar = Nutation.nutationTerms(T);
@@ -84,7 +84,7 @@ Frames.osvJ2000ToECEF = function(osv_J2000)
             nutPar.eps + nutPar.deps);
     vCEP = MathUtils.rotX(MathUtils.rotZ(MathUtils.rotX(vCEP, -nutPar.eps), nutPar.dpsi), 
             nutPar.eps + nutPar.deps);
-
+    
     let osv_CEP = {r : rCEP, v: vCEP, ts: osv_J2000.ts};
     return osv_CEP;
  }
