@@ -25,6 +25,27 @@ class SunAltitude
     }
 
     /**
+     * Map angle to the interval [0, 2*pi].
+     *  
+     * @param {Number} rad 
+     *     The angle (in radians).
+     * @returns The mapped angle.
+     */
+    limitAngle(rad)
+    {
+        var interval = 2 * Math.PI;
+        if (rad < 0)
+        {
+            rad += (1 + Math.floor(-rad / interval)) * interval;
+        }
+        else
+        {
+            rad = rad % interval;
+        }
+        return rad;
+    }
+
+    /**
      * Compute equitorial coordinates of the Sun.
      * 
      * @param {*} JT 
@@ -96,7 +117,7 @@ class SunAltitude
     computeSunLonLat(rA, decl, JD, JT)
     {
         var ST0 = TimeConversions.computeSiderealTime(0, JD, JT);
-        var lon = Coordinates.rad2Deg(limitAngle(Math.PI + rA - Coordinates.deg2Rad(ST0))) - 180.0;
+        var lon = Coordinates.rad2Deg(this.limitAngle(Math.PI + rA - Coordinates.deg2Rad(ST0))) - 180.0;
         var lat = Coordinates.rad2Deg(decl);
 
         if (lat > 90.0) 

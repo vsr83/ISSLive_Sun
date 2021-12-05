@@ -17,7 +17,28 @@
              mL    : [198.5516,   13.1763964649]}
          this.orbitMoon = new Orbit("Moon", this.paramsMoon, 1e-12, 10);
      }
- 
+
+    /**
+     * Map angle to the interval [0, 2*pi].
+     *  
+     * @param {Number} rad 
+     *     The angle (in radians).
+     * @returns The mapped angle.
+     */
+     limitAngle(rad)
+     {
+         var interval = 2 * Math.PI;
+         if (rad < 0)
+         {
+             rad += (1 + Math.floor(-rad / interval)) * interval;
+         }
+         else
+         {
+             rad = rad % interval;
+         }
+         return rad;
+     }
+      
      /**
       * Compute equitorial coordinates of the Moon.
       * 
@@ -92,7 +113,7 @@
      computeMoonLonLat(rA, decl, JD, JT)
      {
          var ST0 = TimeConversions.computeSiderealTime(0, JD, JT);
-         var lon = Coordinates.rad2Deg(limitAngle(Math.PI + rA - Coordinates.deg2Rad(ST0))) - 180.0;
+         var lon = Coordinates.rad2Deg(this.limitAngle(Math.PI + rA - Coordinates.deg2Rad(ST0))) - 180.0;
          var lat = Coordinates.rad2Deg(decl);
  
          if (lat > 90.0) 
