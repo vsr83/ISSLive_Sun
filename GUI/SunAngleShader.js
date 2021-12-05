@@ -284,8 +284,8 @@ class SunAngleShader
         var positionAttributeLocation = gl.getAttribLocation(this.program, "a_position");
         var texCoordAttributeLocation = gl.getAttribLocation(this.program, "a_texCoord");
 
-        var vao = gl.createVertexArray();
-        gl.bindVertexArray(vao);
+        this.vao = gl.createVertexArray();
+        gl.bindVertexArray(this.vao);
         var positionBuffer = gl.createBuffer();
         gl.enableVertexAttribArray(positionAttributeLocation);
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -306,7 +306,7 @@ class SunAngleShader
         gl.enableVertexAttribArray(texCoordAttributeLocation);
         gl.vertexAttribPointer(texCoordAttributeLocation, 2, gl.FLOAT, false, 0, 0);
     
-        gl.bindVertexArray(vao);
+        gl.bindVertexArray(this.vao);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
@@ -369,6 +369,7 @@ class SunAngleShader
 
         gl.clearColor(0, 0, 0, 0);
         gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.bindVertexArray(this.vao);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
 }

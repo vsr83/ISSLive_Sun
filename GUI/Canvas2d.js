@@ -59,21 +59,21 @@ class Canvas2d
     }
 
     /**
-     * Draw ISS location and route.
+     * Draw satellite location and route.
      * 
-     * @param {*} today 
+     * @param {Date} today 
      *      Current time.
-     * @param {*} ISS 
+     * @param {Number} lonSat
+     *      Satellite longitude (in degrees).
+     * @param {Number} latSat
+     *      Satellite longitude (in degrees).
+     * @param {Object} kepler
+     *      Keplerian elements of the satellite.
      * @returns 
      */
-    drawISS(today, ISS)
+    drawOrbit(today, lonSat, latSat, kepler)
     {
-        if (ISS.osv.r[0] == 0)
-        {
-            return;
-        }    
-
-        let period = Kepler.computePeriod(ISS.kepler.a, ISS.kepler.mu);
+        let period = Kepler.computePeriod(kepler.a, kepler.mu);
 
         this.contextJs.beginPath();
         this.contextJs.strokeStyle = '#ffffff';
@@ -88,7 +88,7 @@ class Canvas2d
         {
             let deltaDate = new Date(today.getTime() +  1000 * jdDelta);
         
-            let osvProp = Kepler.propagate(ISS.kepler, deltaDate);
+            let osvProp = Kepler.propagate(kepler, deltaDate);
             let kepler_updated = Kepler.osvToKepler(osvProp.r, osvProp.v, osvProp.ts);
         
             let osv_ECEF = Frames.osvJ2000ToECEF(osvProp);
@@ -127,7 +127,7 @@ class Canvas2d
         {
             let deltaDate = new Date(today.getTime() + 1000 * jdDelta);
         
-            let osvProp = Kepler.propagate(ISS.kepler, deltaDate);
+            let osvProp = Kepler.propagate(kepler, deltaDate);
             let kepler_updated = Kepler.osvToKepler(osvProp.r, osvProp.v, osvProp.ts);
         
             let osv_ECEF = Frames.osvJ2000ToECEF(osvProp);
@@ -155,18 +155,18 @@ class Canvas2d
         }
         this.contextJs.stroke();
         
-        // ISS location on the Canvas.
-        let x = this.lonToX(ISS.lon);
-        let y = this.latToY(ISS.lat);
+        // Satellite location on the Canvas.
+        let x = this.lonToX(lonSat);
+        let y = this.latToY(latSat);
     
-        // Draw ISS location.
+        // Draw satellite location.
         this.contextJs.beginPath();
         this.contextJs.arc(x, y, 10, 0, Math.PI * 2);
         this.contextJs.fillStyle = "#ffffff";
         this.contextJs.fill();
     
         // Draw caption.
-        let caption = ISS.lat.toFixed(2).toString() + "° " + ISS.lon.toFixed(2).toString() + "°";
+        let caption = latSat.toFixed(2).toString() + "° " + lonSat.toFixed(2).toString() + "°";
         let textWidth = this.contextJs.measureText(caption).width;
     
         let captionShift =  x + 10 + textWidth - this.canvasJs.width;

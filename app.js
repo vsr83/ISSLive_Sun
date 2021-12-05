@@ -345,7 +345,7 @@ function update()
 
     if (guiControls.enableIss)
     {
-        canvas2d.drawISS(today, ISS);
+        canvas2d.drawOrbit(today, ISS.lon, ISS.lat, ISS.kepler);
     }
 
     if (interval == null)
