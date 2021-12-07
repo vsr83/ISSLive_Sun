@@ -89,3 +89,60 @@ Frames.osvJ2000ToECEF = function(osv_J2000)
     return osv_CEP;
  }
  
+ /**
+  * Convert J2000 position vector to CEP
+  * @param {*} JT 
+  *     Julian time.
+  * @param {*} r 
+  *      Position in J2000 coordinates.
+  * @returns Position in CEP coordinates.
+  */
+ Frames.posJ2000ToCEP = function(JT, r)
+ {
+    // IAU 1976 Precession Model
+    // (ESA GNSS Data Processing Vol.1 - A2.5.1)
+    let T = (JT - 2451545.0)/36525.0;
+    
+    // (A.23):
+    let z    = 0.6406161388 * T + 3.0407777777e-04 * T*T + 5.0563888888e-06 *T*T*T;
+    let nu   = 0.5567530277 * T - 1.1851388888e-04 * T*T - 1.1620277777e-05 *T*T*T;
+    let zeta = 0.6406161388 * T + 8.3855555555e-05 * T*T + 4.9994444444e-06 *T*T*T;
+    
+    rJ2000 = [r.x, r.y, r.z];
+
+    // Apply the Precession Matrix (A.22):
+    let rMOD = MathUtils.rotZ(MathUtils.rotY(MathUtils.rotZ(rJ2000, zeta), -nu), z);
+    
+    // Apply the Nutation Matrix (A.24):
+    let nutPar = Nutation.nutationTerms(T);
+    let rCEP = MathUtils.rotX(MathUtils.rotZ(MathUtils.rotX(rMOD, -nutPar.eps), nutPar.dpsi), 
+            nutPar.eps + nutPar.deps);
+        
+    return {x: rCEP[0], y : rCEP[1], z : rCEP[2]};
+ }
+
+ /**
+ * Transformation from CEP to ECEF.
+ * 
+ * @param {*} JT
+ *      Julian time.
+ * @param {*} JD
+ *      Julian date.
+ * @param {*} rCEP
+ *      Position in CEP coordinates.
+ * @returns Position in ECEF frame.
+ */
+Frames.posCEPToECEF = function(JT, JD, rCEP)
+{
+    let osv_ECEF = {};
+    let LST = TimeConversions.computeSiderealTime(0, JD, JT);
+    // Apply the Earth Rotation Matrix (A.32):
+    rECEF = MathUtils.rotZ([rCEP.x, rCEP.y, rCEP.z], -LST);
+
+   // console.log(rCEP);
+   // console.log(LST);
+   // console.log(rECEF);
+
+
+    return rECEF;
+}

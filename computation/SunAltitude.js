@@ -8,7 +8,7 @@ class SunAltitude
      */
     constructor()
     {
-        this.paramsEarth   = {a     : [1.00000011, -0.00000005],
+        this.paramsEarth   = {a     : [1.00000011, -0.00000005 ],
             e     : [0.01671022, -0.00003804],
             i     : [0.00005,    -46.94/3600.0], 
             Omega : [-11.26064,  -18228.25/3600.0],
@@ -50,9 +50,11 @@ class SunAltitude
      * 
      * @param {*} JT 
      *     Julian time.
+     * @param {*} JD
+     *     Julian date.
      * @returns Right ascension and declination.
      */
-    computeEquitorial(JT)
+    computeEquitorial(JT, JD)
     {
         // Compute the relative position of the Sun w.r.t. Earth in Earth-centered Ecliptic coordinates.
         var paramsEarth = this.orbitEarth.computeParameters(JT);
@@ -65,8 +67,11 @@ class SunAltitude
 
         // Perform rotation from Earth-centered Ecliptic to Equitorial coordinates.
         var eclipticAngle = Coordinates.deg2Rad(23.43688);
-        var rEquatorial = Coordinates.rotateCartX(rRelative, eclipticAngle);
-        var equitorialSph = Coordinates.cartToSpherical(rEquatorial);
+
+        var rEquatorial_GM2000 = Coordinates.rotateCartX(rRelative, eclipticAngle);
+        var rEquatorial_CEP = Frames.posJ2000ToCEP(JT, rEquatorial_GM2000);
+
+        var equitorialSph = Coordinates.cartToSpherical(rEquatorial_CEP);
 
         return {rA : equitorialSph.theta, decl : equitorialSph.phi};
     }
@@ -95,7 +100,7 @@ class SunAltitude
         var h = Coordinates.deg2Rad(ST0) - rA;
 
         // Transform to horizontal coordinates and return altitude.
-        var rHoriz = Coordinates.equitorialToHorizontal(h, decl, Coordinates.deg2Rad(latitude));            
+        var rHoriz = Coordinates.equitorialToHorizontal(h, decl, Coordinates.deg2Rad(latitude));
         var altitude = Coordinates.rad2Deg(rHoriz.a);
 
         return altitude;

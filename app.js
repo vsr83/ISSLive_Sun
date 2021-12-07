@@ -97,7 +97,7 @@ function updateSunriseSet(today, sunAltitude, JD, JT)
 /**
  * Update captions.
  */
-function updateCaptions()
+function updateCaptions(rA, decl)
 {
     let dateText = document.getElementById('dateText');
     let caption = "";
@@ -281,7 +281,7 @@ function update()
 
     // Compute equitorial coordinates of the Sun.
     var sunAltitude = new SunAltitude();
-    var eqCoords = sunAltitude.computeEquitorial(JT);
+    var eqCoords = sunAltitude.computeEquitorial(JT, JD);
     var rA = eqCoords.rA;
     var decl = eqCoords.decl;
 
@@ -318,11 +318,11 @@ function update()
     ISS.lon = wgs84.lon;
     ISS.lat = wgs84.lat;
 
-    updateCaptions();
+    updateCaptions(rA, decl);
 
     if (updateSun)
     {
-       updateSunriseSet(today, sunAltitude, JD, JT);   
+       //updateSunriseSet(today, sunAltitude, JD, JT);   
        updateSun = false;
     }
 
