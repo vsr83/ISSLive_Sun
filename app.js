@@ -28,13 +28,13 @@ createControls();
 window.addEventListener('resize', requestFrame, false);
 
 // Update location when the map is clicked.
-canvas2d.canvasJs.addEventListener('click', function(event)
+/*canvas2d.canvasJs.addEventListener('click', function(event)
 {
     guiControls.locationLon = xToLon(event.pageX);
     guiControls.locationLat = yToLat(event.pageY);
     requestFrameWithSun();
 });
-
+*/
 // Try to obtain location with the GPS.
 tryUpdateGps();
 
