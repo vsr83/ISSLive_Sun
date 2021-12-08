@@ -97,7 +97,7 @@ function updateSunriseSet(today, sunAltitude, JD, JT)
 /**
  * Update captions.
  */
-function updateCaptions(rA, decl)
+function updateCaptions(rA, decl, today, JT)
 {
     let dateText = document.getElementById('dateText');
     let caption = "";
@@ -318,7 +318,7 @@ function update()
     ISS.lon = wgs84.lon;
     ISS.lat = wgs84.lat;
 
-    updateCaptions(rA, decl);
+    updateCaptions(rA, decl, today, JT);
 
     if (updateSun)
     {

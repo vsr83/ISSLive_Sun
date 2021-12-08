@@ -68,8 +68,8 @@ class SunAltitude
         // Perform rotation from Earth-centered Ecliptic to Equitorial coordinates.
         var eclipticAngle = Coordinates.deg2Rad(23.43688);
 
-        var rEquatorial_GM2000 = Coordinates.rotateCartX(rRelative, eclipticAngle);
-        var rEquatorial_CEP = Frames.posJ2000ToCEP(JT, rEquatorial_GM2000);
+        var rEquatorial_J2000 = Coordinates.rotateCartX(rRelative, eclipticAngle);
+        var rEquatorial_CEP = Frames.posJ2000ToCEP(JT, rEquatorial_J2000);
 
         var equitorialSph = Coordinates.cartToSpherical(rEquatorial_CEP);
 

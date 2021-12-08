@@ -275,35 +275,35 @@ class Canvas2d
         this.contextJs.fillStyle = "#aaaaaa";
     
         // Draw caption.
-        /*let caption = lonlat.lat.toFixed(2).toString() + "° " + lonlat.lon.toFixed(2).toString() + "°";
-        let textWidth = contextJs.measureText(caption).width;
+        let caption = lonlat.lat.toFixed(2).toString() + "° " + lonlat.lon.toFixed(2).toString() + "°";
+        let textWidth = this.contextJs.measureText(caption).width;
     
-        let captionShift =  x + 10 + textWidth - canvasJs.width;
+        let captionShift =  x + 10 + textWidth - this.canvasJs.width;
         if (captionShift < 0)
         {
             captionShift = 0;
         }
-        contextJs.fillText(caption, x+10 - captionShift, y-10);
-        */
+        this.contextJs.fillText(caption, x+10 - captionShift, y-10);
+        
         // Draw Moon path.
         /*
-        for (jdDelta = -1.0; jdDelta < 1.0; jdDelta += 0.01)
+        for (let jdDelta = -1.0; jdDelta < 1.0; jdDelta += 0.1)
         {
             lonlat = moonAltitude.computeMoonLonLat(rA, decl, JD, JT + jdDelta);
     
-            let x = lonToX(lonlat.lon);
-            let y = latToY(lonlat.lat);
+            let x = this.lonToX(lonlat.lon);
+            let y = this.latToY(lonlat.lat);
     
             if (jdDelta == -1.0)
             {
-                contextJs.moveTo(x, y);
+                this.contextJs.moveTo(x, y);
             }
             else
             {
-                contextJs.lineTo(x, y);
+                this.contextJs.lineTo(x, y);
             }
         }
-        contextJs.stroke();*/
+        this.contextJs.stroke();*/
     }
 
     /**

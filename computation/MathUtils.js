@@ -35,6 +35,11 @@ MathUtils.cosd = function(deg)
     return Math.cos(this.deg2Rad(deg));
 }
 
+MathUtils.tand = function(deg)
+{
+    return Math.tan(this.deg2Rad(deg));
+}
+
 MathUtils.asind = function(val)
 {
     return this.rad2Deg(Math.asin(val));
