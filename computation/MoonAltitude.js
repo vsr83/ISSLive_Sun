@@ -10,21 +10,6 @@
       */
      constructor()
      {
-         this.paramsMoon   = {a     : [60.2666, 0.00],
-             e     : [0.0549, 0.00],
-             i     : [5.1454, 0.00], 
-             Omega : [125.1228, -1934.137848157500],
-             lP    : [83.1862,   4069.013348850000], 
-             mL    : [198.5516,   13.1763964649]}
-         this.orbitMoon = new Orbit("Moon", this.paramsMoon, 1e-12, 10);
-         this.paramsEarth   = {a     : [1.00000011, -0.00000005 ],
-            e     : [0.01671022, -0.00003804],
-            i     : [0.00005,    -46.94/3600.0], 
-            Omega : [-11.26064,  -18228.25/3600.0],
-            lP    : [102.94719,   1198.28/3600.0], 
-            mL    : [100.46436,   0.98560910]}
-          this.orbitEarth = new Orbit("Earth", this.paramsEarth, 1e-12, 10);
-
           // Periodic terms for the longitude and distance of the Moon.
           // The unit is 0.000 001 degree for longitude and 0.001 kilometer for distance.
           // Table 47.A in Meeus - Astronomical algorithms 1998.
