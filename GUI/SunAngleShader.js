@@ -58,6 +58,7 @@ class SunAngleShader
         uniform float u_iss_x;
         uniform float u_iss_y;
         uniform float u_iss_z;
+        uniform bool u_show_iss;
 
         // the texCoords passed in from the vertex shader.
         in vec2 v_texCoord;
@@ -143,7 +144,10 @@ class SunAngleShader
 
             if (issAltitude > 0.0)
             {
-                fragColor = fragColor + vec4(0.2, 0.0, 0.0, 0.0);
+                if (u_show_iss)
+                {
+                    fragColor = fragColor + vec4(0.2, 0.0, 0.0, 0.0);
+                }
             }
         }
 
@@ -337,8 +341,10 @@ class SunAngleShader
      *      Sidereal time.
      * @param {*} r 
      *      ECEF coordinates of the ISS.
+     * @param {*} showIss
+     *      Show ISS.
      */
-    drawEarth(LST, rA, decl, r)
+    drawEarth(LST, rA, decl, r, showIss)
     {    
         if (!this.ready)
         {
@@ -353,6 +359,7 @@ class SunAngleShader
         var issXLocation = gl.getUniformLocation(this.program, "u_iss_x");
         var issYLocation = gl.getUniformLocation(this.program, "u_iss_y");
         var issZLocation = gl.getUniformLocation(this.program, "u_iss_z");
+        var showIssLocation = gl.getUniformLocation(this.program, "u_show_iss");
 
         gl.uniform1f(raLocation, rA);
         gl.uniform1f(declLocation, decl);
@@ -360,6 +367,15 @@ class SunAngleShader
         gl.uniform1f(issXLocation, r[0]);
         gl.uniform1f(issYLocation, r[1]);
         gl.uniform1f(issZLocation, r[2]);
+
+        if (showIss)
+        {
+            gl.uniform1f(showIssLocation, 1);
+        }
+        else
+        {
+            gl.uniform1f(showIssLocation, 0);
+        }
 
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 

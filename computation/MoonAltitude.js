@@ -229,6 +229,15 @@
         let beta   = sigmaB / 1000000.0;
         let Delta  = 385000.56 + sigmaR/1000.0;
 
+        let nutTerms = Nutation.nutationTerms(T);
+        let dpsi = nutTerms.dpsi;
+        let deps = nutTerms.deps;
+
+        lambda = lambda + dpsi;
+        let eps = 23.4392911111 + deps;
+
+        let alpha = MathUtils.atan2d(MathUtils.sind(lambda) * MathUtils.cosd(eps) - MathUtils.tand(beta) * MathUtils.sind(eps), MathUtils.cosd(lambda));
+        let delta = MathUtils.asind(MathUtils.sind(beta) * MathUtils.cosd(eps) + MathUtils.cosd(beta) * MathUtils.sind(eps) * MathUtils.sind(lambda));
         //console.log("JT        : " + JT);
         //console.log("T         : " + T);
         //console.log("Lm        : " + Lm % 360.0);
@@ -246,19 +255,8 @@
         //console.log("lambda    : " + lambda % 360);
         //console.log("beta      : " + beta % 360);
         //console.log("Delta     : " + Delta);
-
-
-        let nutTerms = Nutation.nutationTerms(T);
-        let dpsi = nutTerms.dpsi;
-        let deps = nutTerms.deps;
-
-        lambda = lambda + dpsi;
-        let eps = 23.4392911111 + deps;
         //console.log("lambda    : " + lambda % 360);
         //console.log("eps       : " + eps % 360);
-
-        let alpha = MathUtils.atan2d(MathUtils.sind(lambda) * MathUtils.cosd(eps) - MathUtils.tand(beta) * MathUtils.sind(eps), MathUtils.cosd(lambda));
-        let delta = MathUtils.asind(MathUtils.sind(beta) * MathUtils.cosd(eps) + MathUtils.cosd(beta) * MathUtils.sind(eps) * MathUtils.sind(lambda));
         //console.log("alpha     : " + alpha % 360);
         //console.log("delta     : " + delta % 360);
         
@@ -269,7 +267,7 @@
     }
 
     /**
-     * Compute longitude term.
+     * Compute periodic terms term.
      * 
      * @param {*} D 
      *      Mean elongation of the Moon from the Sun

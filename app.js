@@ -298,7 +298,7 @@ function update()
     //console.log("Right Ascension : " + Coordinates.rad2Deg(rA) + " deg ");
     //console.log("Declination     : " + Coordinates.rad2Deg(decl) + " deg");
     
-    shader.drawEarth(LST, rA, decl, ISS.r_ECEF);
+    shader.drawEarth(LST, rA, decl, ISS.r_ECEF, guiControls.enableIss);
 
     /////////////////////////////////////////////////////
 
