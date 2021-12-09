@@ -97,7 +97,7 @@ function updateSunriseSet(today, sunAltitude, JD, JT)
 /**
  * Update captions.
  */
-function updateCaptions(rA, decl, today, JT)
+function updateCaptions(rA, decl, lonlat, rAMoon, declMoon, lonlatMoon, today, JT)
 {
     let dateText = document.getElementById('dateText');
     let caption = "";
@@ -114,15 +114,15 @@ function updateCaptions(rA, decl, today, JT)
     {
         caption = caption + "Julian: " + JT.toString() + "<br>";
     }
-    if (guiControls.showRa)
+    if (guiControls.showSunRa)
     {
         let raTime = Coordinates.deg2Time(Coordinates.rad2Deg(rA));
-        caption = caption + "RA: " + raTime.h + "h " + raTime.m + "m " + raTime.s + "s (" +
+        caption = caption + "Sun RA: " + raTime.h + "h " + raTime.m + "m " + raTime.s + "s (" +
                 Coordinates.rad2Deg(rA).toFixed(5) + "&deg;) <br>";
     }
-    if (guiControls.showDecl)
+    if (guiControls.showSunDecl)
     {
-        caption = caption + "Declination: " + Coordinates.rad2Deg(decl).toFixed(5) + "&deg; <br>";
+        caption = caption + "Sun Declination: " + Coordinates.rad2Deg(decl).toFixed(5) + "&deg; <br>";
     }
     if (guiControls.showSunLongitude)
     {
@@ -132,6 +132,27 @@ function updateCaptions(rA, decl, today, JT)
     {
         caption = caption + "Sun Latitude: " + lonlat.lat.toFixed(5) + "&deg; <br>";
     }
+
+    if (guiControls.showMoonRa)
+    {
+        let raTime = Coordinates.deg2Time(Coordinates.rad2Deg(rAMoon));
+        caption = caption + "Moon RA: " + raTime.h + "h " + raTime.m + "m " + raTime.s + "s (" +
+                Coordinates.rad2Deg(rA).toFixed(5) + "&deg;) <br>";
+    }
+    if (guiControls.showMoonDecl)
+    {
+        caption = caption + "Moon Declination: " + Coordinates.rad2Deg(declMoon).toFixed(5) + "&deg; <br>";
+    }
+    if (guiControls.showMoonLongitude)
+    {
+        caption = caption + "Moon Longitude: " + lonlatMoon.lon.toFixed(5) + "&deg; <br>";
+    }
+    if (guiControls.showMoonLatitude)
+    {
+        caption = caption + "Moon Latitude: " + lonlatMoon.lat.toFixed(5) + "&deg; <br>";
+    }
+
+
     if (guiControls.enableIss)
     {
         if (guiControls.showTelemetry)
@@ -302,7 +323,8 @@ function update()
 
     /////////////////////////////////////////////////////
 
-    lonlat = sunAltitude.computeSunLonLat(rA, decl, JD, JT);
+    let lonlat = sunAltitude.computeSunLonLat(rA, decl, JD, JT);
+    let lonlatMoon = sunAltitude.computeSunLonLat(rAMoon, declMoon, JD, JT);
     let altitude = sunAltitude.computeAltitude(rA, decl, JD, JT, guiControls.locationLon, guiControls.locationLat);
 
     ISS.kepler = Kepler.osvToKepler(ISS.osv.r, ISS.osv.v, ISS.osv.ts);
@@ -318,7 +340,7 @@ function update()
     ISS.lon = wgs84.lon;
     ISS.lat = wgs84.lat;
 
-    updateCaptions(rA, decl, today, JT);
+    updateCaptions(rA, decl, lonlat, rAMoon, declMoon, lonlatMoon, today, JT);
 
     if (updateSun)
     {

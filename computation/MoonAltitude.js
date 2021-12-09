@@ -214,8 +214,8 @@
         let A2 =  53.09 + 479264.290 * T;
         let A3 = 313.45 + 481266.484 * T;
 
+        // Compute periodic terms for longitude, latitude and distance.
         let sigmaTerms = this.computeSigmaTerms(D, Ms, Mm, F, T);
-
         let sigmaL = sigmaTerms.sigmaL;
         let sigmaR = sigmaTerms.sigmaR;
         let sigmaB = sigmaTerms.sigmaB;
@@ -224,7 +224,7 @@
         sigmaB += -2235 * MathUtils.sind(Lm) + 382 * MathUtils.sind(A3) + 175 * MathUtils.sind(A1 - F) 
                   + 175 * MathUtils.sind(A1 + F) + 127 * MathUtils.sind(Lm - Mm) - 115 * MathUtils.sind(Lm + Mm);
 
-
+        // Ecliptic longitude, latitude and distance.
         let lambda = Lm + sigmaL / 1000000.0;
         let beta   = sigmaB / 1000000.0;
         let Delta  = 385000.56 + sigmaR/1000.0;
@@ -236,6 +236,7 @@
         lambda = lambda + dpsi;
         let eps = 23.4392911111 + deps;
 
+        // Apparent Right-Ascension and declination.
         let alpha = MathUtils.atan2d(MathUtils.sind(lambda) * MathUtils.cosd(eps) - MathUtils.tand(beta) * MathUtils.sind(eps), MathUtils.cosd(lambda));
         let delta = MathUtils.asind(MathUtils.sind(beta) * MathUtils.cosd(eps) + MathUtils.cosd(beta) * MathUtils.sind(eps) * MathUtils.sind(lambda));
         //console.log("JT        : " + JT);
@@ -259,11 +260,8 @@
         //console.log("eps       : " + eps % 360);
         //console.log("alpha     : " + alpha % 360);
         //console.log("delta     : " + delta % 360);
-        
-        let rA = alpha;
-        let decl = delta;
 
-        return {rA : MathUtils.deg2Rad(rA), decl : MathUtils.deg2Rad(decl)};
+        return {rA : MathUtils.deg2Rad(alpha), decl : MathUtils.deg2Rad(delta)};
     }
 
     /**

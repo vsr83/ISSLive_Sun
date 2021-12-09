@@ -125,11 +125,6 @@ class SunAltitude
         var lon = Coordinates.rad2Deg(this.limitAngle(Math.PI + rA - Coordinates.deg2Rad(ST0))) - 180.0;
         var lat = Coordinates.rad2Deg(decl);
 
-        if (lat > 90.0) 
-        {
-            lat -= 360.0;
-        }
-
         return {lon : lon, lat : lat};
     }
 

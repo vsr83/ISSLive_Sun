@@ -15,8 +15,8 @@ Coordinates.rotateCartZ = (p, angle) => {return {x : Math.cos(angle) * p.x - Mat
 
 // Conversions between Cartesian and spherical coordinates.
 toNonNegative = (angle) => {return angle < 0 ? angle + 2 * Math.PI : angle;};
-Coordinates.cartToSpherical = (p) => {return {theta : toNonNegative(Math.atan2(p.y, p.x)),
-                                              phi : toNonNegative(Math.atan(p.z / Math.sqrt(p.y*p.y + p.x*p.x))),
+Coordinates.cartToSpherical = (p) => {return {theta : (Math.atan2(p.y, p.x)),
+                                              phi : (Math.atan(p.z / Math.sqrt(p.y*p.y + p.x*p.x))),
                                               r : Math.sqrt(p.x*p.x + p.y*p.y + p.z*p.z)}};
 
 // Conversion between radians and degrees.
