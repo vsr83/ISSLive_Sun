@@ -69,6 +69,43 @@ function createControls()
         this.osvVx = 0.0;
         this.osvVy = 0.0;
         this.osvVz = 0.0;
+        this.osvInputString = function() {
+            osvControls.enableTelemetry.setValue(0);
+            var osvIn = prompt("Orbit State Vector", 
+            "2021-12-05T18:10:00.000 5326.946850262350 4182.210271432980 -611.867277305457 -3.37162589413797 3.42675425977118 -5.96208196793267");
+            if (osvIn != null) 
+            {
+                const terms = osvIn.split(' ');
+                const timeStamp = new Date(terms[0] + 'Z');
+                const posX = parseFloat(terms[1]);
+                const posY = parseFloat(terms[2]);
+                const posZ = parseFloat(terms[3]);
+                const velX = parseFloat(terms[4]);
+                const velY = parseFloat(terms[5]);
+                const velZ = parseFloat(terms[6]);
+
+                console.log("Time stamp: " + timeStamp);
+                console.log("Position X: " + posX);
+                console.log("Position Y: " + posY);
+                console.log("Position Z: " + posZ);
+                console.log("Velocity X: " + velX);
+                console.log("Velocity Y: " + velY);
+                console.log("Velocity Z: " + velZ);
+
+                osvControls.osvYear.setValue(timeStamp.getFullYear());
+                osvControls.osvMonth.setValue(timeStamp.getMonth()+1);
+                osvControls.osvDay.setValue(timeStamp.getDate());
+                osvControls.osvHour.setValue(timeStamp.getHours());
+                osvControls.osvMinute.setValue(timeStamp.getMinutes());
+                osvControls.osvSecond.setValue(timeStamp.getSeconds());
+                osvControls.osvX.setValue(posX);
+                osvControls.osvY.setValue(posY);
+                osvControls.osvZ.setValue(posZ);
+                osvControls.osvVx.setValue(velX * 1000);
+                osvControls.osvVy.setValue(velY * 1000);
+                osvControls.osvVz.setValue(velZ * 1000);
+            }
+        }
     }
 
     /**
@@ -154,7 +191,7 @@ function createControls()
     textFolder.add(guiControls, 'showIssElements').onChange(requestFrame);
  
     const dataFolder = gui.addFolder('Source');
-    dataFolder.add(guiControls, 'enableTelemetry').onChange(requestFrame);
+    osvControls.enableTelemetry = dataFolder.add(guiControls, 'enableTelemetry').onChange(requestFrame);
     dataFolder.add(guiControls, 'enableClock').onChange(requestFrame);
     osvControls.osvYear = dataFolder.add(guiControls, 'osvYear', 1980, 2040, 1).onChange(requestFrame);
     osvControls.osvMonth = dataFolder.add(guiControls, 'osvMonth', 1, 12, 1).onChange(requestFrame);
@@ -168,6 +205,7 @@ function createControls()
     osvControls.osvVx = dataFolder.add(guiControls, 'osvVx', -10000, 10000, 0.000001).onChange(requestFrame);
     osvControls.osvVy = dataFolder.add(guiControls, 'osvVy', -10000, 10000, 0.000001).onChange(requestFrame);
     osvControls.osvVz = dataFolder.add(guiControls, 'osvVz', -10000, 10000, 0.000001).onChange(requestFrame);
+    osvControls.osvInputString = dataFolder.add(guiControls, 'osvInputString');
  
     dataFolder.add({setClockFromOsv:function()
         {

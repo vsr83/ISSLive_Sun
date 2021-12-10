@@ -106,7 +106,7 @@ function updateCaptions(rA, decl, lonlat, rAMoon, declMoon, lonlatMoon, today, J
     {
         warningContainer.style.visibility = "visible";
         warningText.style.visibility = "visible";
-        warningText.innerHTML = "WARNING: <br> Telemetry age: <br>" + Math.floor(delay) + "s > 1000s";
+        warningText.innerHTML = "WARNING: <br> OSV age: " + Math.floor(delay) + "s > 1000s";
     }
     else 
     {
@@ -163,7 +163,6 @@ function updateCaptions(rA, decl, lonlat, rAMoon, declMoon, lonlatMoon, today, J
     {
         caption = caption + "Moon Latitude: " + lonlatMoon.lat.toFixed(5) + "&deg; <br>";
     }
-
 
     if (guiControls.enableIss)
     {
@@ -357,7 +356,7 @@ function update()
 
     if (updateSun)
     {
-       updateSunriseSet(today, sunAltitude, JD, JT);   
+       //updateSunriseSet(today, sunAltitude, JD, JT);   
        updateSun = false;
     }
 

@@ -9,6 +9,11 @@ The ground track is obtained from the latest Orbit State Vectors (OSV) by comput
 
 From comparisons to Astropy calculations and online visualizations, it seems that the computation is able to reach an accuracy around 0.1 degrees (or 10 km) when recent  telemetry is available. However, the accuracy will degrade quickly when the delay from previous received OSV increases. This also affects the use of the delta time feature. The code could be easily updated to use more accurate propagations and archives of OSVs.
 
+The accuracy of the computation of subsolar and sublunar points has been significantly improved from the [sunangle_shader](https://github.com/vsr83/sunangle_shader) project.
+
+Since the Lightstreamer feed seems to be occasionally unreliable, it is possible to initialize the OSV manually with strings obtained from 
+[https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.txt] (https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.txt). See [https://spotthestation.nasa.gov/trajectory_data.cfm](https://spotthestation.nasa.gov/trajectory_data.cfm) for more information. The feature can be used to visualize arbitrary satellites on elliptical orbits as long as OSV is available.
+
 Click below to execute in browser.
 [![Screenshot.](scrshot.png)](https://vsr83.github.io/ISSLive_Sun/)
 
