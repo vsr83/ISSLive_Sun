@@ -31,8 +31,8 @@ body
 {
     color: #fff;
     position : absolute;
-    bottom : 20px;
-    left : 20px;
+    bottom : 10px;
+    left : 10px;
     z-index : 10;
     background-color: black;
     opacity: 1;
@@ -52,14 +52,54 @@ body
     width: 750px;
     color: #fff;
     position : absolute;
-    bottom : 20px;
-    left : 20px;
+    bottom : 10px;
+    left : 10px;
     z-index : 10;
     background-color: black;
     opacity: 0.5;
     font-size: 15px;
     font-family : monospace;
     z-index : 5;
+    /*text-shadow:
+    -1px -1px #000,
+     1px -1px #000,
+    -1px  1px #000,
+     1px  1px #000;*/
+}
+
+#warningText
+{
+    color: #fff;
+    position : absolute;
+    top : 10px;
+    left : 10px;
+    z-index : 11;
+    background-color: #700000;
+    opacity: 1;
+    font-size: 15px;
+    font-family : monospace;
+    padding-left : 20px;
+    padding-right : 20px;
+    /*text-shadow:
+    -1px -1px #000,
+     1px -1px #000,
+    -1px  1px #000,
+     1px  1px #000;*/
+}
+
+#warningContainer
+{
+    width: 200px;
+    color: #fff;
+    position : absolute;
+    top : 10px;
+    left : 10px;
+    z-index : 11;
+    background-color: RED;
+    opacity: 0.5;
+    font-size: 15px;
+    font-family : monospace;
+    z-index : 6;
     /*text-shadow:
     -1px -1px #000,
      1px -1px #000,

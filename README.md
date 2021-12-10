@@ -11,3 +11,6 @@ From comparisons to Astropy calculations and online visualizations, it seems tha
 
 Click below to execute in browser.
 [![Screenshot.](scrshot.png)](https://vsr83.github.io/ISSLive_Sun/)
+
+The textures have been obtained from 
+[https://www.solarsystemscope.com/textures/](https://www.solarsystemscope.com/textures/).

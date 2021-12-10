@@ -97,7 +97,22 @@ function updateSunriseSet(today, sunAltitude, JD, JT)
 function updateCaptions(rA, decl, lonlat, rAMoon, declMoon, lonlatMoon, today, JT)
 {
     const dateText = document.getElementById('dateText');
+    const warningText = document.getElementById('warningText');
+    const warningContainer = document.getElementById('warningContainer');
+
     let caption = "";
+    let delay = (today - ISS.osv.ts) / 1000;
+    if (Math.abs(delay) > 1000)
+    {
+        warningContainer.style.visibility = "visible";
+        warningText.style.visibility = "visible";
+        warningText.innerHTML = "WARNING: <br> Telemetry age: <br>" + Math.floor(delay) + "s > 1000s";
+    }
+    else 
+    {
+        warningContainer.style.visibility = "hidden";
+        warningText.style.visibility = "hidden";
+    }
 
     if (guiControls.showLocal)
     {
@@ -342,7 +357,7 @@ function update()
 
     if (updateSun)
     {
-       //updateSunriseSet(today, sunAltitude, JD, JT);   
+       updateSunriseSet(today, sunAltitude, JD, JT);   
        updateSun = false;
     }
 
