@@ -73,7 +73,7 @@ class Canvas2d
      */
     drawOrbit(today, lonSat, latSat, kepler)
     {
-        let period = Kepler.computePeriod(kepler.a, kepler.mu);
+        const period = Kepler.computePeriod(kepler.a, kepler.mu);
 
         this.contextJs.beginPath();
         this.contextJs.strokeStyle = '#ffffff';
@@ -83,21 +83,21 @@ class Canvas2d
         // Draw Sun path.
         let lonPrev = 0;
 
-        let jdStep = period / 1000;
+        const jdStep = period / 1000;
         for (let jdDelta = 0; jdDelta < period; jdDelta += jdStep)
         {
-            let deltaDate = new Date(today.getTime() +  1000 * jdDelta);
+            const deltaDate = new Date(today.getTime() +  1000 * jdDelta);
         
-            let osvProp = Kepler.propagate(kepler, deltaDate);
-            let kepler_updated = Kepler.osvToKepler(osvProp.r, osvProp.v, osvProp.ts);
+            const osvProp = Kepler.propagate(kepler, deltaDate);
+            const kepler_updated = Kepler.osvToKepler(osvProp.r, osvProp.v, osvProp.ts);
         
-            let osv_ECEF = Frames.osvJ2000ToECEF(osvProp);
-            let r_ECEF = osv_ECEF.r;
-            let lon = MathUtils.atan2d(r_ECEF[1], r_ECEF[0]);
-            let lat = MathUtils.rad2Deg(Math.asin(r_ECEF[2] / MathUtils.norm(r_ECEF)));
+            const osv_ECEF = Frames.osvJ2000ToECEF(osvProp);
+            const r_ECEF = osv_ECEF.r;
+            const lon = MathUtils.atan2d(r_ECEF[1], r_ECEF[0]);
+            const lat = MathUtils.rad2Deg(Math.asin(r_ECEF[2] / MathUtils.norm(r_ECEF)));
         
-            let x = this.lonToX(lon);
-            let y = this.latToY(lat);
+            const x = this.lonToX(lon);
+            const y = this.latToY(lat);
             //console.log([lon, lat]);
     
             if (jdDelta != 0 && Math.abs(lonPrev - lon) > 160.0)
@@ -125,18 +125,18 @@ class Canvas2d
         lonPrev = 0;
         for (let jdDelta = -period; jdDelta < 0; jdDelta += jdStep)
         {
-            let deltaDate = new Date(today.getTime() + 1000 * jdDelta);
+            const deltaDate = new Date(today.getTime() + 1000 * jdDelta);
         
-            let osvProp = Kepler.propagate(kepler, deltaDate);
-            let kepler_updated = Kepler.osvToKepler(osvProp.r, osvProp.v, osvProp.ts);
+            const osvProp = Kepler.propagate(kepler, deltaDate);
+            const kepler_updated = Kepler.osvToKepler(osvProp.r, osvProp.v, osvProp.ts);
         
-            let osv_ECEF = Frames.osvJ2000ToECEF(osvProp);
-            let r_ECEF = osv_ECEF.r;
-            let lon = MathUtils.atan2d(r_ECEF[1], r_ECEF[0]);
-            let lat = MathUtils.rad2Deg(Math.asin(r_ECEF[2] / MathUtils.norm(r_ECEF)));
+            const osv_ECEF = Frames.osvJ2000ToECEF(osvProp);
+            const r_ECEF = osv_ECEF.r;
+            const lon = MathUtils.atan2d(r_ECEF[1], r_ECEF[0]);
+            const lat = MathUtils.rad2Deg(Math.asin(r_ECEF[2] / MathUtils.norm(r_ECEF)));
         
-            let x = this.lonToX(lon);
-            let y = this.latToY(lat);
+            const x = this.lonToX(lon);
+            const y = this.latToY(lat);
     
             if (jdDelta != -period && Math.abs(lonPrev - lon) > 180.0)
             {
@@ -156,8 +156,8 @@ class Canvas2d
         this.contextJs.stroke();
         
         // Satellite location on the Canvas.
-        let x = this.lonToX(lonSat);
-        let y = this.latToY(latSat);
+        const x = this.lonToX(lonSat);
+        const y = this.latToY(latSat);
     
         // Draw satellite location.
         this.contextJs.beginPath();
@@ -166,8 +166,8 @@ class Canvas2d
         this.contextJs.fill();
     
         // Draw caption.
-        let caption = latSat.toFixed(2).toString() + "° " + lonSat.toFixed(2).toString() + "°";
-        let textWidth = this.contextJs.measureText(caption).width;
+        const caption = latSat.toFixed(2).toString() + "° " + lonSat.toFixed(2).toString() + "°";
+        const textWidth = this.contextJs.measureText(caption).width;
     
         let captionShift =  x + 10 + textWidth - this.canvasJs.width;
         if (captionShift < 0)
@@ -196,8 +196,8 @@ class Canvas2d
         let lonlat = sunAltitude.computeSunLonLat(rA, decl, JD, JT);
 
         // Sun location on the Canvas.
-        let x = this.lonToX(lonlat.lon);
-        let y = this.latToY(lonlat.lat);
+        const x = this.lonToX(lonlat.lon);
+        const y = this.latToY(lonlat.lat);
 
         // Draw Sun location.
         this.contextJs.beginPath();
@@ -211,8 +211,8 @@ class Canvas2d
         this.contextJs.fillStyle = "#ffff00";
 
         // Draw caption.
-        let caption = lonlat.lat.toFixed(2).toString() + "° " + lonlat.lon.toFixed(2).toString() + "°";
-        let textWidth = this.contextJs.measureText(caption).width;
+        const caption = lonlat.lat.toFixed(2).toString() + "° " + lonlat.lon.toFixed(2).toString() + "°";
+        const textWidth = this.contextJs.measureText(caption).width;
 
         let captionShift =  x + 10 + textWidth - this.canvasJs.width;
         if (captionShift < 0)
@@ -226,8 +226,8 @@ class Canvas2d
         {
             lonlat = sunAltitude.computeSunLonLat(rA, decl, JD, JT + jdDelta);
 
-            let x = this.lonToX(lonlat.lon);
-            let y = this.latToY(lonlat.lat);
+            const x = this.lonToX(lonlat.lon);
+            const y = this.latToY(lonlat.lat);
 
             if (jdDelta == -1.0)
             {
@@ -257,11 +257,11 @@ class Canvas2d
      */
     drawMoon(moonAltitude, rA, decl, JD, JT)
     {
-        let lonlat = moonAltitude.computeMoonLonLat(rA, decl, JD, JT);
+        const lonlat = moonAltitude.computeMoonLonLat(rA, decl, JD, JT);
     
         // Sun location on the Canvas.
-        let x = this.lonToX(lonlat.lon);
-        let y = this.latToY(lonlat.lat);
+        const x = this.lonToX(lonlat.lon);
+        const y = this.latToY(lonlat.lat);
     
         // Draw Sun location.
         this.contextJs.beginPath();
@@ -275,8 +275,8 @@ class Canvas2d
         this.contextJs.fillStyle = "#aaaaaa";
     
         // Draw caption.
-        let caption = lonlat.lat.toFixed(2).toString() + "° " + lonlat.lon.toFixed(2).toString() + "°";
-        let textWidth = this.contextJs.measureText(caption).width;
+        const caption = lonlat.lat.toFixed(2).toString() + "° " + lonlat.lon.toFixed(2).toString() + "°";
+        const textWidth = this.contextJs.measureText(caption).width;
     
         let captionShift =  x + 10 + textWidth - this.canvasJs.width;
         if (captionShift < 0)
@@ -319,9 +319,9 @@ class Canvas2d
         this.contextJs.font = "10px Arial";
         this.contextJs.fillStyle = "#777777";
 
-        for (var lon = 0; lon <= 180.0; lon += lonResolution)
+        for (let lon = 0; lon <= 180.0; lon += lonResolution)
         {
-            var x = this.lonToX(lon);
+            let x = this.lonToX(lon);
             this.contextJs.beginPath();
             this.contextJs.moveTo(x, 0);
             this.contextJs.lineTo(x, this.canvasJs.height);
@@ -339,14 +339,14 @@ class Canvas2d
                 this.contextJs.fillText(" -" + lon.toString() + "°", x, 15);
             }
         }
-        x = this.canvasJs.width - 1;
+        let x = this.canvasJs.width - 1;
         this.contextJs.moveTo(x, 0);
         this.contextJs.lineTo(x, this.canvasJs.height);
         this.contextJs.stroke();
 
-        for (var lat = 0; lat <= 90.0; lat += latResolution)
+        for (let lat = 0; lat <= 90.0; lat += latResolution)
         {
-            var y = this.latToY(lat);
+            let y = this.latToY(lat);
             this.contextJs.beginPath();
             this.contextJs.moveTo(0, y);
             this.contextJs.lineTo(this.canvasJs.width, y);
@@ -364,19 +364,19 @@ class Canvas2d
                 this.contextJs.fillText(" -" + lat.toString() + "°", 0, y - 5);
             }
         }
-        y = this.canvasJs.height - 1;
+        let y = this.canvasJs.height - 1;
         this.contextJs.beginPath();
         this.contextJs.moveTo(0, y);
         this.contextJs.lineTo(this.canvasJs.width, y);
         this.contextJs.stroke();
 
-        var x = this.lonToX(0);
+        x = this.lonToX(0);
         this.contextJs.moveTo(x, 0);
         this.contextJs.lineTo(x, this.canvasJs.height);
         this.contextJs.strokeStyle = '#ffffff';
         this.contextJs.stroke();    
 
-        var y = this.latToY(0);
+        y = this.latToY(0);
         this.contextJs.moveTo(0, y);
         this.contextJs.lineTo(this.canvasJs.width, y);
         this.contextJs.strokeStyle = '#ffffff';
@@ -413,8 +413,8 @@ class Canvas2d
      */
     drawLocation(lon, lat, altitude)
     {
-        let x = this.lonToX(lon);
-        let y = this.latToY(lat);
+        const x = this.lonToX(lon);
+        const y = this.latToY(lat);
         this.contextJs.beginPath();
         this.contextJs.fillStyle = "#ffff00";
         this.contextJs.moveTo(x, y - 5);
@@ -426,7 +426,7 @@ class Canvas2d
         this.contextJs.font = "12px Arial";
         this.contextJs.fillStyle = "#ffff00";
 
-        let caption = "Location: " + lat.toFixed(2).toString() + "° " + 
+        const caption = "Location: " + lat.toFixed(2).toString() + "° " + 
             lon.toFixed(2).toString() + "°";
         this.contextJs.fillText(caption, x+10, y-36);
         this.contextJs.fillText("Altitude: " + altitude.toFixed(3) + "°", x+10, y-24);

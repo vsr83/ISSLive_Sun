@@ -214,7 +214,7 @@ class SunAngleShader
     {
         // Create a texture.
         let gl = this.gl;
-        var texture = gl.createTexture();
+        const texture = gl.createTexture();
     
         gl.activeTexture(gl.TEXTURE0 + index);
         gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -278,15 +278,15 @@ class SunAngleShader
         this.program = this.compileProgram();
         gl.useProgram(this.program);
 
-        let imageLocationDay = gl.getUniformLocation(this.program, "u_imageDay");
-        let imageLocationNight = gl.getUniformLocation(this.program, "u_imageNight");
+        const imageLocationDay = gl.getUniformLocation(this.program, "u_imageDay");
+        const imageLocationNight = gl.getUniformLocation(this.program, "u_imageNight");
 
         this.loadTexture(0, this.imageDay, imageLocationDay);
         this.loadTexture(1, this.imageNight, imageLocationNight);
     
         // look up where the vertex data needs to go.
-        var positionAttributeLocation = gl.getAttribLocation(this.program, "a_position");
-        var texCoordAttributeLocation = gl.getAttribLocation(this.program, "a_texCoord");
+        const positionAttributeLocation = gl.getAttribLocation(this.program, "a_position");
+        const texCoordAttributeLocation = gl.getAttribLocation(this.program, "a_texCoord");
 
         this.vao = gl.createVertexArray();
         gl.bindVertexArray(this.vao);
@@ -295,9 +295,8 @@ class SunAngleShader
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
 
-
         // Load Texture and vertex coordinate buffers. 
-        var texCoordBuffer = gl.createBuffer();
+        const texCoordBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
             0.0,  0.0,
@@ -353,13 +352,13 @@ class SunAngleShader
 
         let gl = this.gl;
         // Update computational parameter uniforms.
-        var raLocation = gl.getUniformLocation(this.program, "u_rA");
-        var declLocation = gl.getUniformLocation(this.program, "u_decl");
-        var lstLocation = gl.getUniformLocation(this.program, "u_LST");
-        var issXLocation = gl.getUniformLocation(this.program, "u_iss_x");
-        var issYLocation = gl.getUniformLocation(this.program, "u_iss_y");
-        var issZLocation = gl.getUniformLocation(this.program, "u_iss_z");
-        var showIssLocation = gl.getUniformLocation(this.program, "u_show_iss");
+        const raLocation = gl.getUniformLocation(this.program, "u_rA");
+        const declLocation = gl.getUniformLocation(this.program, "u_decl");
+        const lstLocation = gl.getUniformLocation(this.program, "u_LST");
+        const issXLocation = gl.getUniformLocation(this.program, "u_iss_x");
+        const issYLocation = gl.getUniformLocation(this.program, "u_iss_y");
+        const issZLocation = gl.getUniformLocation(this.program, "u_iss_z");
+        const showIssLocation = gl.getUniformLocation(this.program, "u_show_iss");
 
         gl.uniform1f(raLocation, rA);
         gl.uniform1f(declLocation, decl);

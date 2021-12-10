@@ -99,7 +99,7 @@ function updateSunriseSet(today, sunAltitude, JD, JT)
  */
 function updateCaptions(rA, decl, lonlat, rAMoon, declMoon, lonlatMoon, today, JT)
 {
-    let dateText = document.getElementById('dateText');
+    const dateText = document.getElementById('dateText');
     let caption = "";
 
     if (guiControls.showLocal)
@@ -301,16 +301,16 @@ function update()
     JDref = Math.ceil(TimeConversions.computeJulianDay(2000, 1, 1));
 
     // Compute equitorial coordinates of the Sun.
-    var sunAltitude = new SunAltitude();
-    var eqCoords = sunAltitude.computeEquitorial(JT, JD);
-    var rA = eqCoords.rA;
-    var decl = eqCoords.decl;
+    const sunAltitude = new SunAltitude();
+    const eqCoordsSun = sunAltitude.computeEquitorial(JT, JD);
+    const rASun = eqCoordsSun.rA;
+    const declSun = eqCoordsSun.decl;
 
     // Compute equitorial coordinates of the Moon.
-    var moonAltitude = new MoonAltitude();
-    var eqCoordsMoon = moonAltitude.computeEquitorial(JT);
-    var rAMoon = eqCoordsMoon.rA;
-    var declMoon = eqCoordsMoon.decl;
+    const moonAltitude = new MoonAltitude();
+    const eqCoordsMoon = moonAltitude.computeEquitorial(JT);
+    const rAMoon = eqCoordsMoon.rA;
+    const declMoon = eqCoordsMoon.decl;
 
     // Compute sidereal time perform modulo to avoid floating point accuracy issues with 32-bit
     // floats in the shader:
@@ -319,13 +319,14 @@ function update()
     //console.log("Right Ascension : " + Coordinates.rad2Deg(rA) + " deg ");
     //console.log("Declination     : " + Coordinates.rad2Deg(decl) + " deg");
     
-    shader.drawEarth(LST, rA, decl, ISS.r_ECEF, guiControls.enableIss);
+    shader.drawEarth(LST, rASun, declSun, ISS.r_ECEF, guiControls.enableIss);
 
     /////////////////////////////////////////////////////
 
-    let lonlat = sunAltitude.computeSunLonLat(rA, decl, JD, JT);
+    let lonlat = sunAltitude.computeSunLonLat(rASun, declSun, JD, JT);
     let lonlatMoon = sunAltitude.computeSunLonLat(rAMoon, declMoon, JD, JT);
-    let altitude = sunAltitude.computeAltitude(rA, decl, JD, JT, guiControls.locationLon, guiControls.locationLat);
+    let altitude = sunAltitude.computeAltitude(rASun, declSun, JD, JT, guiControls.locationLon, 
+        guiControls.locationLat);
 
     ISS.kepler = Kepler.osvToKepler(ISS.osv.r, ISS.osv.v, ISS.osv.ts);
     ISS.osvProp = Kepler.propagate(ISS.kepler, today);
@@ -340,7 +341,7 @@ function update()
     ISS.lon = wgs84.lon;
     ISS.lat = wgs84.lat;
 
-    updateCaptions(rA, decl, lonlat, rAMoon, declMoon, lonlatMoon, today, JT);
+    updateCaptions(rASun, declSun, lonlat, rAMoon, declMoon, lonlatMoon, today, JT);
 
     if (updateSun)
     {
@@ -358,7 +359,7 @@ function update()
     }
     if (guiControls.enableSun)
     {
-        canvas2d.drawSun(sunAltitude, rA, decl, JD, JT);
+        canvas2d.drawSun(sunAltitude, rASun, declSun, JD, JT);
     }
     if (guiControls.enableLocation)
     {

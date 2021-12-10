@@ -3,19 +3,19 @@
  * The computation implements the algorithm in section 47 of 
  *   Meeus - Astronomical Algorithms, 1998.
  */
- class MoonAltitude
- {
-     /**
-      * Initialize orbital parameters and orbits.
-      */
-     constructor()
-     {
-          // Periodic terms for the longitude and distance of the Moon.
-          // The unit is 0.000 001 degree for longitude and 0.001 kilometer for distance.
-          // Table 47.A in Meeus - Astronomical algorithms 1998.
-          this.lonTerms = [
-          //  Multiple of    Coeff.sine Coeff. cosine
-          //  D  Ms  Mm   F     
+class MoonAltitude
+{
+    /**
+     * Initialize orbital parameters and orbits.
+     */
+    constructor()
+    {
+        // Periodic terms for the longitude and distance of the Moon.
+        // The unit is 0.000 001 degree for longitude and 0.001 kilometer for distance.
+        // Table 47.A in Meeus - Astronomical algorithms 1998.
+        this.lonTerms = [
+        //   Multiple of    Coeff.sine Coeff. cosine
+        //    D  Ms  Mm   F     
             [ 0,  0,  1,  0,    6288774,  -20905355],
             [ 2,  0, -1,  0,    1274027,   -3699111],
             [ 2,  0,  0,  0,     658314,   -2955968],
@@ -78,10 +78,10 @@
             [ 2,  0, -1, -2,          0,       8752]
         ];
 
-          // Periodic terms for the latitude of the moon.
-          // The unit is 0.000 001 degree for longitude and 0.001 kilometer for distance.
-          // Table 47.A in Meeus - Astronomical algorithms 1998.
-          this.latTerms = [
+        // Periodic terms for the latitude of the moon.
+        // The unit is 0.000 001 degree for longitude and 0.001 kilometer for distance.
+        // Table 47.B in Meeus - Astronomical algorithms 1998.
+        this.latTerms = [
           //  Multiple of    Coeff.sine 
           //  D  Ms  Mm   F     
             [ 0,  0,  0,  1,    5128122],
@@ -145,7 +145,7 @@
             [ 4, -1,  0, -1,        115],
             [ 2, -2,  0,  1,        107]
         ];
-     }
+    }
 
     /**
      * Map angle to the interval [0, 2*pi].
@@ -154,19 +154,19 @@
      *     The angle (in radians).
      * @returns The mapped angle.
      */
-     limitAngle(rad)
-     {
-         var interval = 2 * Math.PI;
-         if (rad < 0)
-         {
-             rad += (1 + Math.floor(-rad / interval)) * interval;
-         }
-         else
-         {
-             rad = rad % interval;
-         }
-         return rad;
-     }
+    limitAngle(rad)
+    {
+        const interval = 2 * Math.PI;
+        if (rad < 0)
+        {
+            rad += (1 + Math.floor(-rad / interval)) * interval;
+        }
+        else
+        {
+            rad = rad % interval;
+        }
+        return rad;
+    }
       
     /**
      * Compute equitorial coordinates of the Moon.
@@ -177,32 +177,32 @@
      */
     computeEquitorial(JT)
     {
-        let T = (JT - 2451545.0)/36525.0;
-        let T2 = T * T;
-        let T3 = T2 * T;
-        let T4 = T3 * T;
+        const T = (JT - 2451545.0)/36525.0;
+        const T2 = T * T;
+        const T3 = T2 * T;
+        const T4 = T3 * T;
        
         // Meeus - Astronomical Algorithms 1998 Chapter 47.
 
         // Mean longitude of the Moon.
-        let Lm = 218.3164477 + 481267.88123421 * T - 0.0015786 * T2 + T3 / 538841.0 - T4 / 65194000.0;
+        const Lm = 218.3164477 + 481267.88123421 * T - 0.0015786 * T2 + T3 / 538841.0 - T4 / 65194000.0;
         // Mean elongation of the Moon from the Sun.
-        let D  = 297.8501921 + 445267.11140340 * T - 0.0018819 * T2 + T3 / 545868.0 - T4 / 113065000.0;
+        const D  = 297.8501921 + 445267.11140340 * T - 0.0018819 * T2 + T3 / 545868.0 - T4 / 113065000.0;
         // Mean anomaly of the Sun (Earth).
-        let Ms = 357.5291092 + 35999.050290900 * T - 0.0001536 * T2 + T3 / 24490000.0;
+        const Ms = 357.5291092 + 35999.050290900 * T - 0.0001536 * T2 + T3 / 24490000.0;
         // Mean anomaly of the Moon:
-        let Mm = 134.9633964 + 477198.86750550 * T + 0.0087414 * T2 + T3 / 69699.0 - T4 / 14712000.0;
+        const Mm = 134.9633964 + 477198.86750550 * T + 0.0087414 * T2 + T3 / 69699.0 - T4 / 14712000.0;
         // Moon's argument of latitude:
-        let F  =  93.2720950 + 483202.01752330 * T - 0.0036539 * T2 - T3 / 3526000.0 + T4 / 863310000.0;
+        const F  =  93.2720950 + 483202.01752330 * T - 0.0036539 * T2 - T3 / 3526000.0 + T4 / 863310000.0;
 
-        let A1 = 119.75 + 131.849 * T;
-        let A2 =  53.09 + 479264.290 * T;
-        let A3 = 313.45 + 481266.484 * T;
+        const A1 = 119.75 + 131.849 * T;
+        const A2 =  53.09 + 479264.290 * T;
+        const A3 = 313.45 + 481266.484 * T;
 
         // Compute periodic terms for longitude, latitude and distance.
-        let sigmaTerms = this.computeSigmaTerms(D, Ms, Mm, F, T);
+        const sigmaTerms = this.computeSigmaTerms(D, Ms, Mm, F, T);
         let sigmaL = sigmaTerms.sigmaL;
-        let sigmaR = sigmaTerms.sigmaR;
+        const sigmaR = sigmaTerms.sigmaR;
         let sigmaB = sigmaTerms.sigmaB;
 
         sigmaL +=  3958 * MathUtils.sind(A1) + 1962 * MathUtils.sind(Lm - F) + 318 * MathUtils.sind(A2);
@@ -211,19 +211,44 @@
 
         // Ecliptic longitude, latitude and distance.
         let lambda = Lm + sigmaL / 1000000.0;
-        let beta   = sigmaB / 1000000.0;
-        let Delta  = 385000.56 + sigmaR/1000.0;
+        const beta   = sigmaB / 1000000.0;
+        const Delta  = 385000.56 + sigmaR/1000.0;
 
-        let nutTerms = Nutation.nutationTerms(T);
-        let dpsi = nutTerms.dpsi;
-        let deps = nutTerms.deps;
+        const nutTerms = Nutation.nutationTerms(T);
+        const dpsi = nutTerms.dpsi;
+        const deps = nutTerms.deps;
 
         lambda = lambda + dpsi;
-        let eps = 23.4392911111 + deps;
+        const eps = 23.4392911111 + deps;
 
         // Apparent Right-Ascension and declination.
-        let alpha = MathUtils.atan2d(MathUtils.sind(lambda) * MathUtils.cosd(eps) - MathUtils.tand(beta) * MathUtils.sind(eps), MathUtils.cosd(lambda));
-        let delta = MathUtils.asind(MathUtils.sind(beta) * MathUtils.cosd(eps) + MathUtils.cosd(beta) * MathUtils.sind(eps) * MathUtils.sind(lambda));
+        const alpha = MathUtils.atan2d(MathUtils.sind(lambda) * MathUtils.cosd(eps) - MathUtils.tand(beta) * MathUtils.sind(eps), MathUtils.cosd(lambda));
+        const delta = MathUtils.asind(MathUtils.sind(beta) * MathUtils.cosd(eps) + MathUtils.cosd(beta) * MathUtils.sind(eps) * MathUtils.sind(lambda));
+        
+        // Meeus - Astronomical Algorithms 1998 Chapter 47 Example 47.a
+        // provides reference result for 1992 April 12, at 0h TD:
+        // JDE 2448724.5
+        // T = -0.0077221081451
+        // Lm = 134.290182 deg
+        // D = 113.842304 deg
+        // Ms = 97.643514 deg
+        // Mm = 5.150833 deg
+        // A1 = 109.57 deg.
+        // A2 = 123.78 deg.
+        // A3 = 229.53 deg.
+        // E = 1.000194.
+        // Sigma_l = -1 127 527
+        // Sigma_b = -3 229126
+        // Sigma_r = -16 590 875
+        // lambda = 134.290182 deg
+        // lambda = 133.167265 after nutation fixes.
+        // beta = -3.229126 deg
+        // Delta = 368409.7 km.
+        // pi = 0.991990 deg
+        // eps = 23.440646 deg
+        // alpha = 134.688470 deg
+        // delta = 13.768368 deg
+
         //console.log("JT        : " + JT);
         //console.log("T         : " + T);
         //console.log("Lm        : " + Lm % 360.0);
@@ -265,8 +290,8 @@
      */
     computeSigmaTerms(D, Ms, Mm, F, T)
     {
-        let Ecorr = 1.0 - 0.002516 * T - 0.0000074 * T*T;
-        let Ecorr2 = Ecorr * Ecorr;
+        const Ecorr = 1.0 - 0.002516 * T - 0.0000074 * T*T;
+        const Ecorr2 = Ecorr * Ecorr;
 
         let sigmaL = 0.0; 
         let sigmaR = 0.0;
@@ -322,63 +347,63 @@
         return {sigmaL : sigmaL, sigmaR : sigmaR, sigmaB : sigmaB};
     }
  
-     /**
-      * Compute altitude of the Moon.
-      * 
-      * @param {*} rA 
-      *     Right-ascension of the Moon (in radians).
-      * @param {*} decl 
-      *     Declination of the Moon (in radians).
-      * @param {*} JD 
-      *     Julian day.
-      * @param {*} JT 
-      *     Julian time.
-      * @param {*} longitude
-      *     Longitude of the observer (in degrees).
-      * @param {*} latitude 
-      *     Latitude of the observer (in degrees).
-      * @returns The altitude of the Moon.
-      */
-     computeAltitude(rA, decl, JD, JT, longitude, latitude)
-     {
+    /**
+     * Compute altitude of the Moon.
+     * 
+     * @param {*} rA 
+     *     Right-ascension of the Moon (in radians).
+     * @param {*} decl 
+     *     Declination of the Moon (in radians).
+     * @param {*} JD 
+     *     Julian day.
+     * @param {*} JT 
+     *     Julian time.
+     * @param {*} longitude
+     *     Longitude of the observer (in degrees).
+     * @param {*} latitude 
+     *     Latitude of the observer (in degrees).
+     * @returns The altitude of the Moon.
+     */
+    computeAltitude(rA, decl, JD, JT, longitude, latitude)
+    {
          // Compute hour angle of the Moon in equitorial coordinates.
-         var ST0 = TimeConversions.computeSiderealTime(longitude, JD, JT);
-         var h = Coordinates.deg2Rad(ST0) - rA;
+         const ST0 = TimeConversions.computeSiderealTime(longitude, JD, JT);
+         const h = Coordinates.deg2Rad(ST0) - rA;
  
          // Transform to horizontal coordinates and return altitude.
-         var rHoriz = Coordinates.equitorialToHorizontal(h, decl, Coordinates.deg2Rad(latitude));            
-         var altitude = Coordinates.rad2Deg(rHoriz.a);
- 
-         return altitude;
-     }
- 
-     /**
-      * Compute the longitude and latitude of the location, where Moon is at Zenith.
-      * 
-      * @param {*} rA 
-      *     Right-ascension of the Moon (in radians).
-      * @param {*} decl 
-      *     Declination of the Moon (in radians).
-      * @param {*} JD 
-      *     Julian day.
-      * @param {*} JT 
-      *     Julian time.
-      * @returns The longitude and latitude.
-      */
-     computeMoonLonLat(rA, decl, JD, JT)
-     {
-         var ST0 = TimeConversions.computeSiderealTime(0, JD, JT);
-         var lon = Coordinates.rad2Deg(this.limitAngle(Math.PI + rA - Coordinates.deg2Rad(ST0))) - 180.0;
-         var lat = Coordinates.rad2Deg(decl);
- 
-         if (lat > 90.0) 
-         {
-             lat -= 360.0;
-         }
+        const rHoriz = Coordinates.equitorialToHorizontal(h, decl, Coordinates.deg2Rad(latitude));            
+        const altitude = Coordinates.rad2Deg(rHoriz.a);
 
-         //console.log("Longitude : " + lon % 360);
-         //console.log("Latitude  : " + lat % 360);
+        return altitude;
+    }
  
-         return {lon : lon, lat : lat};
-     }
- }
+    /**
+     * Compute the longitude and latitude of the location, where Moon is at Zenith.
+     * 
+     * @param {*} rA 
+     *     Right-ascension of the Moon (in radians).
+     * @param {*} decl 
+     *     Declination of the Moon (in radians).
+     * @param {*} JD 
+     *     Julian day.
+     * @param {*} JT 
+     *     Julian time.
+     * @returns The longitude and latitude.
+     */
+    computeMoonLonLat(rA, decl, JD, JT)
+    {
+        const ST0 = TimeConversions.computeSiderealTime(0, JD, JT);
+        const lon = Coordinates.rad2Deg(this.limitAngle(Math.PI + rA - Coordinates.deg2Rad(ST0))) - 180.0;
+        let lat = Coordinates.rad2Deg(decl);
+ 
+        if (lat > 90.0) 
+        {
+            lat -= 360.0;
+        }
+
+        //console.log("Longitude : " + lon % 360);
+        //console.log("Latitude  : " + lat % 360);
+ 
+        return {lon : lon, lat : lat};
+    }
+}

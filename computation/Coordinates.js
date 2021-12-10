@@ -78,16 +78,16 @@ Coordinates.deg2Time = (deg) => {
 }
 
 Coordinates.wgs84ToCart = (lat, lon, h) => {
-    let a = 6378137.0;
-    let b = 6356752.314245;
-    let e = Math.sqrt((a*a - b*b) / (a*a));
+    const a = 6378137.0;
+    const b = 6356752.314245;
+    const e = Math.sqrt((a*a - b*b) / (a*a));
 
-    let sinLat = Math.sin(Coordinates.deg2Rad(lat));
-    let N = a / Math.sqrt(1 - e * e * sinLat * sinLat);
+    const sinLat = Math.sin(Coordinates.deg2Rad(lat));
+    const N = a / Math.sqrt(1 - e * e * sinLat * sinLat);
     
-    let x = (N + h) * Math.cos(Coordinates.deg2Rad(lat)) * Math.cos(Coordinates.deg2Rad(lon));
-    let y = (N + h) * Math.cos(Coordinates.deg2Rad(lat)) * Math.sin(Coordinates.deg2Rad(lon));
-    let z = ((1 - e*e) * N + h) * Math.sin(Coordinates.deg2Rad(lat));
+    const x = (N + h) * Math.cos(Coordinates.deg2Rad(lat)) * Math.cos(Coordinates.deg2Rad(lon));
+    const y = (N + h) * Math.cos(Coordinates.deg2Rad(lat)) * Math.sin(Coordinates.deg2Rad(lon));
+    const z = ((1 - e*e) * N + h) * Math.sin(Coordinates.deg2Rad(lat));
 
     return [x, y, z];
 }
@@ -100,25 +100,25 @@ Coordinates.wgs84ToCart = (lat, lon, h) => {
  * @returns The latitude and longitude.
  */
 Coordinates.cartToWgs84 = (r) => {
-    let lon = Coordinates.rad2Deg(Math.atan2(r[1], r[0]));
+    const lon = Coordinates.rad2Deg(Math.atan2(r[1], r[0]));
 
-    let p = Math.sqrt(r[0]*r[0] + r[1]*r[1]);
-    let a = 6378137.0;
-    let b = 6356752.314245;
-    let e = Math.sqrt((a*a - b*b) / (a*a));
+    const p = Math.sqrt(r[0]*r[0] + r[1]*r[1]);
+    const a = 6378137.0;
+    const b = 6356752.314245;
+    const e = Math.sqrt((a*a - b*b) / (a*a));
     
     let lat = Coordinates.rad2Deg(Math.atan(r[2]/((1 - e*e)*p)));
-
     let h = 0;
+
     for (let iter = 0; iter < 5; iter++)
     {
         let sinPrev = Math.sin(Coordinates.deg2Rad(lat));
         let cosPrev = Math.cos(Coordinates.deg2Rad(lat));
 
-        let N = a / Math.sqrt(1 - e*e*sinPrev*sinPrev);
+        const N = a / Math.sqrt(1 - e*e*sinPrev*sinPrev);
         h = p / cosPrev - N;
 
-        let d = (1 - e*e*N/(N + h)) * p;
+        const d = (1 - e*e*N/(N + h)) * p;
         lat = Coordinates.rad2Deg(Math.atan(r[2] / d));
     }
 

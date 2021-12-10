@@ -49,11 +49,11 @@ Kepler.computePeriod = function(a, mu)
  */
 Kepler.solveEccentricAnomaly = function(M, e, tolerance, maxIterations)
 {
-    var iterationCount = 0;
-    var error = this.nrTolerance + 1.0;
+    let iterationCount = 0;
+    let error = this.nrTolerance + 1.0;
 
     // Eccentric anomaly.
-    var eA = MathUtils.deg2Rad(M);
+    let eA = MathUtils.deg2Rad(M);
 
     while (error > this.nrTolerance)
     {
@@ -84,13 +84,13 @@ Kepler.solveEccentricAnomaly = function(M, e, tolerance, maxIterations)
  */
 Kepler.osvToKepler = function(r, v, ts)
 {
-    let kepler = {};
+    const kepler = {};
 
     kepler.ts = ts;
 
-    let incl_min = 1e-7;
+    const incl_min = 1e-7;
     // Standard gravitational parameter for Earth (m^3/s^2)
-    let mu = 3.986004418e14;
+    const mu = 3.986004418e14;
 
     kepler.mu = mu;
 
@@ -128,8 +128,8 @@ Kepler.osvToKepler = function(r, v, ts)
         // absolute value for the denominator:
         if (Math.abs(MathUtils.sind(kepler.Omega)) < Math.abs(MathUtils.cosd(kepler.Omega)))
         {
-            let asc_y = kepler.ecc[2] / MathUtils.sind(kepler.incl);
-            let asc_x = (1 / MathUtils.cosd(kepler.Omega)) * (kepler.ecc[0] + 
+            const asc_y = kepler.ecc[2] / MathUtils.sind(kepler.incl);
+            const asc_x = (1 / MathUtils.cosd(kepler.Omega)) * (kepler.ecc[0] + 
                 MathUtils.sind(kepler.Omega) * MathUtils.cosd(kepler.incl) * kepler.ecc[2] / 
                 MathUtils.sind(kepler.incl));
 
@@ -137,8 +137,8 @@ Kepler.osvToKepler = function(r, v, ts)
         }
         else
         {
-            asc_y = kepler.ecc[2] / MathUtils.sind(kepler.incl);
-            asc_x = (1 / MathUtils.sind(kepler.Omega)) * (kepler.ecc[1] - 
+            const asc_y = kepler.ecc[2] / MathUtils.sind(kepler.incl);
+            const asc_x = (1 / MathUtils.sind(kepler.Omega)) * (kepler.ecc[1] - 
                 MathUtils.cosd(kepler.Omega) * MathUtils.cosd(kepler.incl) * kepler.ecc[2] / 
                 MathUtils.sind(kepler.incl));
 
@@ -190,20 +190,20 @@ Kepler.propagate = function(kepler, dateIn)
     }
 
     // Compute difference between target time and the time stamp associated to the Keplerian elements.
-    var diff = dateIn.getTime() - kepler.ts.getTime();
+    const diff = dateIn.getTime() - kepler.ts.getTime();
 
     // Propagate mean anomaly according to the computed difference and solve natural anoamaly.
-    let Mext = kepler.M + 360.0 * diff / (Kepler.computePeriod(kepler.a, kepler.mu) * 1000.0);
-    let Eext = this.solveEccentricAnomaly(Mext, kepler.ecc_norm, 1e-7, 10);
-    let fext = this.computeNaturalAnomaly(kepler.ecc_norm, Eext);
+    const Mext = kepler.M + 360.0 * diff / (Kepler.computePeriod(kepler.a, kepler.mu) * 1000.0);
+    const Eext = this.solveEccentricAnomaly(Mext, kepler.ecc_norm, 1e-7, 10);
+    const fext = this.computeNaturalAnomaly(kepler.ecc_norm, Eext);
 
-    let r_orbital = [kepler.a * (MathUtils.cosd(Eext) - kepler.ecc_norm), kepler.b * MathUtils.sind(Eext), 0];
+    const r_orbital = [kepler.a * (MathUtils.cosd(Eext) - kepler.ecc_norm), kepler.b * MathUtils.sind(Eext), 0];
 
-    let dEdt = (Math.sqrt(kepler.mu) / (Math.pow(kepler.a, 1.5))) / (1.0 - kepler.ecc_norm * MathUtils.cosd(Eext));
-    let v_orbital = [-kepler.a * dEdt * MathUtils.sind(Eext), kepler.b * dEdt * MathUtils.cosd(Eext), 0];
+    const dEdt = (Math.sqrt(kepler.mu) / (Math.pow(kepler.a, 1.5))) / (1.0 - kepler.ecc_norm * MathUtils.cosd(Eext));
+    const v_orbital = [-kepler.a * dEdt * MathUtils.sind(Eext), kepler.b * dEdt * MathUtils.cosd(Eext), 0];
 
-    let r_ext = MathUtils.rotZ(MathUtils.rotX(MathUtils.rotZ(r_orbital, kepler.omega), kepler.incl), kepler.Omega);
-    let v_ext = MathUtils.rotZ(MathUtils.rotX(MathUtils.rotZ(v_orbital, kepler.omega), kepler.incl), kepler.Omega);
+    const r_ext = MathUtils.rotZ(MathUtils.rotX(MathUtils.rotZ(r_orbital, kepler.omega), kepler.incl), kepler.Omega);
+    const v_ext = MathUtils.rotZ(MathUtils.rotX(MathUtils.rotZ(v_orbital, kepler.omega), kepler.incl), kepler.Omega);
 
     return {r: r_ext, v: v_ext, ts: dateIn};
 }

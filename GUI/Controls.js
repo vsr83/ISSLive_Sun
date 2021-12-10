@@ -10,7 +10,7 @@ var timeControls = {};
  */
 function createControls()
 {
-    var initDate = new Date();
+    const initDate = new Date();
  
     guiControls = new function()
     {
@@ -76,20 +76,20 @@ function createControls()
      */
     function configureTime()
     {
-        var newDate = new Date(guiControls.dateYear, parseInt(guiControls.dateMonth)-1, guiControls.dateDay, 
+        const newDate = new Date(guiControls.dateYear, parseInt(guiControls.dateMonth)-1, guiControls.dateDay, 
             guiControls.timeHour, guiControls.timeMinute, guiControls.timeSecond).getTime();
 
-        var today = new Date().getTime();
+        const today = new Date().getTime();
         dateDelta = newDate - today;
     }
  
     gui = new dat.GUI();
-    let displayFolder = gui.addFolder('Display');
+    const displayFolder = gui.addFolder('Display');
     displayFolder.add(guiControls, 'enableGrid').onChange(requestFrame);
  
-    let locationFolder = gui.addFolder('Location');
-    let locLatControl = locationFolder.add(guiControls, 'locationLat', -90, 90, 0.01).onChange(requestFrameWithSun);
-    let locLonControl = locationFolder.add(guiControls, 'locationLon', -180, 180, 0.01).onChange(requestFrameWithSun);
+    const locationFolder = gui.addFolder('Location');
+    const locLatControl = locationFolder.add(guiControls, 'locationLat', -90, 90, 0.01).onChange(requestFrameWithSun);
+    const locLonControl = locationFolder.add(guiControls, 'locationLon', -180, 180, 0.01).onChange(requestFrameWithSun);
  
     locationFolder.add({fromGps:function()
     {
@@ -98,14 +98,14 @@ function createControls()
     }}, 'fromGps');
  
  
-    let lonControl = displayFolder.add(guiControls, 'gridLonResolution', 1, 180, 1).onChange(requestFrameWithSun);
-    let latControl = displayFolder.add(guiControls, 'gridLatResolution', 1, 180, 1).onChange(requestFrameWithSun);
+    const lonControl = displayFolder.add(guiControls, 'gridLonResolution', 1, 180, 1).onChange(requestFrameWithSun);
+    const latControl = displayFolder.add(guiControls, 'gridLatResolution', 1, 180, 1).onChange(requestFrameWithSun);
     displayFolder.add(guiControls, 'enableIss').onChange(requestFrame());
     displayFolder.add(guiControls, 'enableSun').onChange(requestFrame());
     displayFolder.add(guiControls, 'enableMoon').onChange(requestFrame());
     displayFolder.add(guiControls, 'enableLocation').onChange(requestFrame());
      
-    let timeFolder = gui.addFolder('Time');
+    const timeFolder = gui.addFolder('Time');
  
     timeControls.yearControl = timeFolder.add(guiControls, 'dateYear', 1980, 2040, 1).onChange(configureTime);
     timeControls.monthControl = timeFolder.add(guiControls, 'dateMonth', 1, 12, 1).onChange(configureTime);
@@ -135,7 +135,7 @@ function createControls()
             requestFrameWithSun();
         }}, 'reset');
      
-    let textFolder = gui.addFolder('Caption');
+    const textFolder = gui.addFolder('Caption');
     textFolder.add(guiControls, 'showLocal').onChange(requestFrame);
     textFolder.add(guiControls, 'showUtc').onChange(requestFrame);
     textFolder.add(guiControls, 'showJulian').onChange(requestFrame);
@@ -153,7 +153,7 @@ function createControls()
     textFolder.add(guiControls, 'showIssLocation').onChange(requestFrame);
     textFolder.add(guiControls, 'showIssElements').onChange(requestFrame);
  
-    let dataFolder = gui.addFolder('Source');
+    const dataFolder = gui.addFolder('Source');
     dataFolder.add(guiControls, 'enableTelemetry').onChange(requestFrame);
     dataFolder.add(guiControls, 'enableClock').onChange(requestFrame);
     osvControls.osvYear = dataFolder.add(guiControls, 'osvYear', 1980, 2040, 1).onChange(requestFrame);

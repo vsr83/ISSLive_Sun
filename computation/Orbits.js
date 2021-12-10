@@ -40,7 +40,7 @@ class Orbit
      */
     limitAngle(rad)
     {
-        var interval = 2 * Math.PI;
+        const interval = 2 * Math.PI;
         if (rad < 0)
         {
             rad += (1 + Math.floor(-rad / interval)) * interval;
@@ -67,11 +67,11 @@ class Orbit
      */
     solveEccentricAnomaly(M, e, tolerance, maxIterations)
     {
-        var iterationCount = 0;
-        var error = this.nrTolerance + 1.0;
+        let iterationCount = 0;
+        let error = this.nrTolerance + 1.0;
 
         // Eccentric anomaly.
-        var eA = M;
+        let eA = M;
 
         while (error > this.nrTolerance)
         {
@@ -101,9 +101,8 @@ class Orbit
      */
     computeNaturalAnomaly(eA, e)
     {
-        var xu = (Math.cos(eA) - e)/(1 - e*Math.cos(eA));
-        var yu = Math.sqrt(1 - e * e) * Math.sin(eA) /
-             (1 - e * Math.cos(eA));
+        const xu = (Math.cos(eA) - e)/(1 - e*Math.cos(eA));
+        const yu = Math.sqrt(1 - e * e) * Math.sin(eA) / (1 - e * Math.cos(eA));
         
         return this.limitAngle(Math.atan2(yu, xu));
     }
@@ -129,10 +128,10 @@ class Orbit
      */
     computeParameters(JT)
     {
-        var refJT = 2451545.0;
-        var dT = (JT - refJT) / 36525.0;
+        const refJT = 2451545.0;
+        const dT = (JT - refJT) / 36525.0;
 
-        var params = {};
+        const params = {};
         params.a = this.a[0] + dT * this.a[1];
         params.e = this.e[0] + dT * this.e[1];
         params.i = this.deg2rad(this.i[0] + dT * this.i[1]);
@@ -153,24 +152,24 @@ class Orbit
     computePosition(params)
     {
         // Compute Mean, Eccentric and Natural aAomaly:
-        var M = this.limitAngle(params.mL - params.lP);
-        var E = this.solveEccentricAnomaly(M, params.e, this.nrTolerance, 
+        const M = this.limitAngle(params.mL - params.lP);
+        const E = this.solveEccentricAnomaly(M, params.e, this.nrTolerance, 
             this.nrIterations);
-        var f = this.computeNaturalAnomaly(E, params.e);
+        const f = this.computeNaturalAnomaly(E, params.e);
 
         // Argument of Perihelion.
-        var omega = params.lP - params.Omega;
+        const omega = params.lP - params.Omega;
 
         // Distance between the sun and the planet.
-        var distance = params.a * (1.0 - params.e * Math.cos(E));
+        const distance = params.a * (1.0 - params.e * Math.cos(E));
 
-        var coordEc = Coordinates.rotateCartZ(
+        const coordEc = Coordinates.rotateCartZ(
             Coordinates.rotateCartX(
                 Coordinates.rotateCartZ({x : distance, y : 0, z : 0}, omega + f), 
             params.i), 
         params.Omega);
 
-        var spherical = Coordinates.cartToSpherical(coordEc);
+        const spherical = Coordinates.cartToSpherical(coordEc);
         
         return {M : M, E : E, f : f, omega : omega,
                 x : coordEc.x, y : coordEc.y, z : coordEc.z,
@@ -187,7 +186,7 @@ class Orbit
      */
     printParams(params, position)
     {
-        var radDegStr = (rad) => {return rad + " rad " + Coordinates.rad2Deg(rad) + " deg";};
+        const radDegStr = (rad) => {return rad + " rad " + Coordinates.rad2Deg(rad) + " deg";};
 
         console.log("Name: " + this.name);
         console.log(" Arg. of Perih.    (o): " + radDegStr(position.omega));

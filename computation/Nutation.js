@@ -2,11 +2,11 @@
  * Implementation of 1980 IAU theory of nutation according to section A.2.5.1 of 
  * ESA - GNSS Data Processing Vol. 1.
  */
- var Nutation = {};
+var Nutation = {};
 
- // Table A.2
- // Extracted from https://hpiers.obspm.fr/eop-pc/models/nutations/nut_IAU1980.dat.
- Nutation.nutData = [
+// Table A.2
+// Extracted from https://hpiers.obspm.fr/eop-pc/models/nutations/nut_IAU1980.dat.
+Nutation.nutData = [
      // k_i1 k_i2 k_i3 k_i4 k_i5  Period       A_0j       A_1j       B_0j       B_1j
      [  0,   0,   0,   0,   1,   -6798.4, -171996.0,    -174.2,   92025.0,       8.9],
      [  0,   0,   2,  -2,   2,     182.6,  -13187.0,      -1.6,    5736.0,      -3.1],
@@ -114,67 +114,67 @@
      [ -1,   0,   0,   1,   1,    -388.3,       1.0,       0.0,       0.0,       0.0],
      [ -1,  -1,   0,   2,   1,      35.0,       1.0,       0.0,       0.0,       0.0],
      [  0,   1,   0,   1,   0,      27.3,       1.0,       0.0,       0.0,       0.0]
- ];
+];
  
- /**
-  * Implementation of the IAU 1980 Nutation Model.
-  * 
-  * @param {*} T 
-  *      Julian centuries from J2000.0.
-  * @returns The nutation parameters eps, deps and dpsi (degrees).
-  */
- Nutation.nutationTerms = function(T)
- {
-     let T2 = T * T;
-     let T3 = T2 * T;
+/**
+ * Implementation of the IAU 1980 Nutation Model.
+ * 
+ * @param {*} T 
+ *      Julian centuries from J2000.0.
+ * @returns The nutation parameters eps, deps and dpsi (degrees).
+ */
+Nutation.nutationTerms = function(T)
+{
+    const T2 = T * T;
+    const T3 = T2 * T;
 
-     // Obliquity of the ecliptic (A.25).
-     let eps = 23.4392911111 - 0.0130041667 * T - 1.6388888889e-07 * T2 + 5.0361111111e-07 * T3;
+    // Obliquity of the ecliptic (A.25).
+    const eps = 23.4392911111 - 0.0130041667 * T - 1.6388888889e-07 * T2 + 5.0361111111e-07 * T3;
   
-     // Mean anomaly of the Moon (A.26):
-     let a_1 = 134.9629813889 + (198.8673980555 * T) + (8.6972222222e-3 * T2) + (1.7777777778e-05 * T3) 
-             + (1325.0 * 360.0 * T) % 360.0;
-      // Mean anomaly of the Sun (A.27):
-     let a_2 = 357.5277233333 + (359.0503400000 * T) - (1.6027777778e-4 * T2) - (3.3333333333e-06 * T3) 
-             + (99.0 * 360.0 * T) % 360.0;
-     // Moon's mean argument of latitude (A.28):
-     let a_3 =  93.2719102778 + ( 82.0175380556 * T) - (0.0036825000000 * T2) + (3.0555555555e-06 * T3)
-             + (1342.0 * 360.0 * T) % 360.0;
-     // Moon's mean elongation from the Sun (A.29):
-     let a_4 = 297.8503630555 + (307.1114800000 * T) - (0.0019141666667 * T2) + (5.2777777778e-06 * T3)
-             + (1236.0 * 360.0 * T) % 360.0;
-     // Mean longitude of the ascending lunar node (A.30):
-     let a_5 = 125.0445222222 - (134.1362608333 * T) + (0.0020708333333 * T2) + (2.2222222222e-06 * T3)
-             - (5.0 * 360.0 * T) % 360.0;
-  
-     // Indices for the equation (A.25).
-     const KJ1 = 0;
-     const KJ2 = 1;
-     const KJ3 = 2;
-     const KJ4 = 3;
-     const KJ5 = 4;
-     const A0J = 6;
-     const A1J = 7;
-     const B0J = 8;
-     const B1J = 9;
+    // Mean anomaly of the Moon (A.26):
+    const a_1 = 134.9629813889 + (198.8673980555 * T) + (8.6972222222e-3 * T2) + (1.7777777778e-05 * T3) 
+            + (1325.0 * 360.0 * T) % 360.0;
+    // Mean anomaly of the Sun (A.27):
+    const a_2 = 357.5277233333 + (359.0503400000 * T) - (1.6027777778e-4 * T2) - (3.3333333333e-06 * T3) 
+            + (99.0 * 360.0 * T) % 360.0;
+    // Moon's mean argument of latitude (A.28):
+    const a_3 =  93.2719102778 + ( 82.0175380556 * T) - (0.0036825000000 * T2) + (3.0555555555e-06 * T3)
+            + (1342.0 * 360.0 * T) % 360.0;
+    // Moon's mean elongation from the Sun (A.29):
+    const a_4 = 297.8503630555 + (307.1114800000 * T) - (0.0019141666667 * T2) + (5.2777777778e-06 * T3)
+            + (1236.0 * 360.0 * T) % 360.0;
+    // Mean longitude of the ascending lunar node (A.30):
+    const a_5 = 125.0445222222 - (134.1362608333 * T) + (0.0020708333333 * T2) + (2.2222222222e-06 * T3)
+            - (5.0 * 360.0 * T) % 360.0;
  
-     // From 1e-4 arcseconds to degrees. 
-     const factor = 1.0/(10000.0 * 3600.0);
+    // Indices for the equation (A.25).
+    const KJ1 = 0;
+    const KJ2 = 1;
+    const KJ3 = 2;
+    const KJ4 = 3;
+    const KJ5 = 4;
+    const A0J = 6;
+    const A1J = 7;
+    const B0J = 8;
+    const B1J = 9;
+
+    // From 1e-4 arcseconds to degrees. 
+    const factor = 1.0/(10000.0 * 3600.0);
                
-     let N = this.nutData.length;
-     let dpsi = 0.0;
-     let deps = 0.0;
-     // Note j in (A.25) runs from 1 to N but 0 to N-1 below:
-     for (let j = 0; j < N; j++)
-     {
-         let data = Nutation.nutData[j];
+    const N = this.nutData.length;
+    let dpsi = 0.0;
+    let deps = 0.0;
+    // Note j in (A.25) runs from 1 to N but 0 to N-1 below:
+    for (let j = 0; j < N; j++)
+    {
+        const data = Nutation.nutData[j];
   
-         // Coefficient for delta_psi term.
-         // Equation (A.25) terms (A_0j + A_1j * T) * sin(\sum_i k_ji * a_i)
-         //                       (B_0j + B_1j * T) * cos(\sum_i k_ji * a_i)
-         let angle = data[KJ1] * a_1 + data[KJ2] * a_2 + data[KJ3] * a_3 + data[KJ4] * a_4 + data[KJ5] * a_5;
-         dpsi = dpsi + factor * (data[A0J] + data[A1J] * T) * MathUtils.sind(angle);
-         deps = deps + factor * (data[B0J] + data[B1J] * T) * MathUtils.cosd(angle);
-     }
-     return {eps : eps, deps : deps % 360.0, dpsi : dpsi % 360.0};
- }
+        // Coefficient for delta_psi term.
+        // Equation (A.25) terms (A_0j + A_1j * T) * sin(\sum_i k_ji * a_i)
+        //                       (B_0j + B_1j * T) * cos(\sum_i k_ji * a_i)
+        const angle = data[KJ1] * a_1 + data[KJ2] * a_2 + data[KJ3] * a_3 + data[KJ4] * a_4 + data[KJ5] * a_5;
+        dpsi = dpsi + factor * (data[A0J] + data[A1J] * T) * MathUtils.sind(angle);
+        deps = deps + factor * (data[B0J] + data[B1J] * T) * MathUtils.cosd(angle);
+    }
+    return {eps : eps, deps : deps % 360.0, dpsi : dpsi % 360.0};
+}

@@ -33,7 +33,7 @@ class SunAltitude
      */
     limitAngle(rad)
     {
-        var interval = 2 * Math.PI;
+        const interval = 2 * Math.PI;
         if (rad < 0)
         {
             rad += (1 + Math.floor(-rad / interval)) * interval;
@@ -57,21 +57,21 @@ class SunAltitude
     computeEquitorial(JT, JD)
     {
         // Compute the relative position of the Sun w.r.t. Earth in Earth-centered Ecliptic coordinates.
-        var paramsEarth = this.orbitEarth.computeParameters(JT);
-        var paramsSun = this.orbitSun.computeParameters(JT);
-        var positionEarth = this.orbitEarth.computePosition(paramsEarth);
-        var positionSun = this.orbitSun.computePosition(paramsSun);
-        var rEarth = {x: positionEarth.x, y: positionEarth.y, z:positionEarth.z};
-        var rSun = {x: positionSun.x, y: positionSun.y, z:positionSun.z};
-        var rRelative = Coordinates.diffCart(rSun, rEarth);
+        const paramsEarth = this.orbitEarth.computeParameters(JT);
+        const paramsSun = this.orbitSun.computeParameters(JT);
+        const positionEarth = this.orbitEarth.computePosition(paramsEarth);
+        const positionSun = this.orbitSun.computePosition(paramsSun);
+        const rEarth = {x: positionEarth.x, y: positionEarth.y, z:positionEarth.z};
+        const rSun = {x: positionSun.x, y: positionSun.y, z:positionSun.z};
+        const rRelative = Coordinates.diffCart(rSun, rEarth);
 
         // Perform rotation from Earth-centered Ecliptic to Equitorial coordinates.
-        var eclipticAngle = Coordinates.deg2Rad(23.43688);
+        const eclipticAngle = Coordinates.deg2Rad(23.43688);
 
-        var rEquatorial_J2000 = Coordinates.rotateCartX(rRelative, eclipticAngle);
-        var rEquatorial_CEP = Frames.posJ2000ToCEP(JT, rEquatorial_J2000);
+        const rEquatorial_J2000 = Coordinates.rotateCartX(rRelative, eclipticAngle);
+        const rEquatorial_CEP = Frames.posJ2000ToCEP(JT, rEquatorial_J2000);
 
-        var equitorialSph = Coordinates.cartToSpherical(rEquatorial_CEP);
+        const equitorialSph = Coordinates.cartToSpherical(rEquatorial_CEP);
 
         return {rA : equitorialSph.theta, decl : equitorialSph.phi};
     }
@@ -96,12 +96,12 @@ class SunAltitude
     computeAltitude(rA, decl, JD, JT, longitude, latitude)
     {
         // Compute hour angle of the Sun in equitorial coordinates.
-        var ST0 = TimeConversions.computeSiderealTime(longitude, JD, JT);
-        var h = Coordinates.deg2Rad(ST0) - rA;
+        const ST0 = TimeConversions.computeSiderealTime(longitude, JD, JT);
+        const h = Coordinates.deg2Rad(ST0) - rA;
 
         // Transform to horizontal coordinates and return altitude.
-        var rHoriz = Coordinates.equitorialToHorizontal(h, decl, Coordinates.deg2Rad(latitude));
-        var altitude = Coordinates.rad2Deg(rHoriz.a);
+        const rHoriz = Coordinates.equitorialToHorizontal(h, decl, Coordinates.deg2Rad(latitude));
+        const altitude = Coordinates.rad2Deg(rHoriz.a);
 
         return altitude;
     }
@@ -121,9 +121,9 @@ class SunAltitude
      */
     computeSunLonLat(rA, decl, JD, JT)
     {
-        var ST0 = TimeConversions.computeSiderealTime(0, JD, JT);
-        var lon = Coordinates.rad2Deg(this.limitAngle(Math.PI + rA - Coordinates.deg2Rad(ST0))) - 180.0;
-        var lat = Coordinates.rad2Deg(decl);
+        const ST0 = TimeConversions.computeSiderealTime(0, JD, JT);
+        const lon = Coordinates.rad2Deg(this.limitAngle(Math.PI + rA - Coordinates.deg2Rad(ST0))) - 180.0;
+        const lat = Coordinates.rad2Deg(decl);
 
         return {lon : lon, lat : lat};
     }
@@ -141,18 +141,18 @@ class SunAltitude
      */
     computeSunriseSet(today, JD, JT, jtStep, lon, lat)
     {
-        var eqCoords = this.computeEquitorial(JT);
-        let altitude = this.computeAltitude(eqCoords.rA, eqCoords.decl, JD, JT, lon, lat);
+        const eqCoords = this.computeEquitorial(JT);
+        const altitude = this.computeAltitude(eqCoords.rA, eqCoords.decl, JD, JT, lon, lat);
 
         sunriseTime = null;
         sunsetTime = null;
-        let sunAngularRadius = 0.265;
+        const sunAngularRadius = 0.265;
 
         if (altitude < 0)
         {
             for (let deltaJt = 0; deltaJt < 1.0; deltaJt += jtStep)
             {
-                var eqCoords = this.computeEquitorial(JT + deltaJt);
+                const eqCoords = this.computeEquitorial(JT + deltaJt);
                 let altFuture = this.computeAltitude(eqCoords.rA, eqCoords.decl, JD, JT + deltaJt, lon, lat);
                 if (altFuture >= -sunAngularRadius)
                 {
@@ -163,7 +163,7 @@ class SunAltitude
             }
             for (let deltaJt = 0; deltaJt < 1.0; deltaJt += jtStep)
             {
-                var eqCoords = this.computeEquitorial(JT - deltaJt);
+                const eqCoords = this.computeEquitorial(JT - deltaJt);
                 let altPast = this.computeAltitude(eqCoords.rA, eqCoords.decl, JD, JT - deltaJt, lon, lat);
                 if (altPast >= -sunAngularRadius)
                 {
@@ -177,7 +177,7 @@ class SunAltitude
         {
             for (let deltaJt = 0; deltaJt < 1.0; deltaJt += jtStep)
             {
-                var eqCoords = this.computeEquitorial(JT + deltaJt);
+                const eqCoords = this.computeEquitorial(JT + deltaJt);
                 let altFuture = this.computeAltitude(eqCoords.rA, eqCoords.decl, JD, JT + deltaJt, lon, lat);
             
                 if (altFuture <= -sunAngularRadius)
@@ -189,7 +189,7 @@ class SunAltitude
             }
             for (let deltaJt = 0; deltaJt < 1.0; deltaJt += jtStep)
             {
-                var eqCoords = this.computeEquitorial(JT -deltaJt);
+                const eqCoords = this.computeEquitorial(JT -deltaJt);
                 let altPast = this.computeAltitude(eqCoords.rA, eqCoords.decl, JD, JT - deltaJt, lon, lat);
                 
                 if (altPast <= -sunAngularRadius)
@@ -202,5 +202,4 @@ class SunAltitude
         }
         return {rise : sunriseTime, set : sunsetTime};
     }
-
 }
