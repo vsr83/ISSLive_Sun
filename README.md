@@ -12,7 +12,7 @@ From comparisons to Astropy calculations and online visualizations, it seems tha
 The accuracy of the computation of subsolar and sublunar points has been significantly improved from the [sunangle_shader](https://github.com/vsr83/sunangle_shader) project.
 
 Since the Lightstreamer feed seems to be occasionally unreliable, it is possible to initialize the OSV manually with strings obtained from 
-[NASA](https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.txt). See [NASA](https://spotthestation.nasa.gov/trajectory_data.cfm) for more information. The feature can be used to visualize arbitrary satellites on elliptical orbits as long as OSV is available.
+[trajectory data](https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.txt). See [this page](https://spotthestation.nasa.gov/trajectory_data.cfm) for more information. The feature can be used to visualize arbitrary satellites on elliptical orbits as long as OSV is available.
 
 Click below to execute in browser.
 [![Screenshot.](scrshot.png)](https://vsr83.github.io/ISSLive_Sun/)
