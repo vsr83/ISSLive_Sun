@@ -106,7 +106,7 @@ function updateCaptions(rA, decl, lonlat, rAMoon, declMoon, lonlatMoon, today, J
     {
         warningContainer.style.visibility = "visible";
         warningText.style.visibility = "visible";
-        warningText.innerHTML = "WARNING: <br> OSV age: " + Math.floor(delay) + "s > 1000s";
+        warningText.innerHTML = "WARNING: <br> OSV age: " + Math.floor(Math.abs(delay)) + "s > 1000s";
     }
     else 
     {
@@ -241,6 +241,12 @@ function update()
     // Compute Julian time.
     let dateNow = new Date();
     let today = null;
+
+    if (guiControls.timeWarp)
+    {
+        dateDelta += timeControls.warpSeconds.getValue() * 1000;
+        //console.log(dateDelta);
+    }
 
     // If date and time updates are disabled, set date manually from the GUI controls:
     if (!guiControls.enableClock)

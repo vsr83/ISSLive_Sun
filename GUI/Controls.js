@@ -54,6 +54,8 @@ function createControls()
         this.GitHub = function() {
             window.open("https://github.com/vsr83/ISSLive_Sun", "_blank").focus();
         };
+        this.warpSeconds = 60;
+        this.timeWarp = false;
  
         this.enableTelemetry = true;
         this.enableClock = true;
@@ -143,7 +145,8 @@ function createControls()
     displayFolder.add(guiControls, 'enableLocation').onChange(requestFrame());
      
     const timeFolder = gui.addFolder('Time');
- 
+    timeControls.warpSeconds = timeFolder.add(guiControls, 'warpSeconds', -60, 60, 1).onChange(configureTime); 
+    timeFolder.add(guiControls, 'timeWarp').onChange(requestFrame);
     timeControls.yearControl = timeFolder.add(guiControls, 'dateYear', 1980, 2040, 1).onChange(configureTime);
     timeControls.monthControl = timeFolder.add(guiControls, 'dateMonth', 1, 12, 1).onChange(configureTime);
     timeControls.dayControl = timeFolder.add(guiControls, 'dateDay', 1, 31, 1).onChange(configureTime);
@@ -168,6 +171,8 @@ function createControls()
             timeControls.hourControl.setValue(resetDate.getHours());
             timeControls.minuteControl.setValue(resetDate.getMinutes());
             timeControls.secondControl.setValue(resetDate.getSeconds());
+
+            dateDelta = 0;
     
             requestFrameWithSun();
         }}, 'reset');
@@ -192,7 +197,7 @@ function createControls()
  
     const dataFolder = gui.addFolder('Source');
     osvControls.enableTelemetry = dataFolder.add(guiControls, 'enableTelemetry').onChange(requestFrame);
-    dataFolder.add(guiControls, 'enableClock').onChange(requestFrame);
+    osvControls.enableClock = dataFolder.add(guiControls, 'enableClock').onChange(requestFrame);
     osvControls.osvYear = dataFolder.add(guiControls, 'osvYear', 1980, 2040, 1).onChange(requestFrame);
     osvControls.osvMonth = dataFolder.add(guiControls, 'osvMonth', 1, 12, 1).onChange(requestFrame);
     osvControls.osvDay = dataFolder.add(guiControls, 'osvDay', 1, 31, 1).onChange(requestFrame);
