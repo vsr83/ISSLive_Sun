@@ -1,6 +1,3 @@
-// Compiled shaders.
-var program = null;
-
 // Interval used for redrawing the visualization regularly.
 var interval = null;
 
@@ -88,8 +85,8 @@ function tryUpdateGps()
  */
 function updateSunriseSet(today, sunAltitude, JD, JT)
 {
-    let jtStep = 1e-4;
-    var foo = sunAltitude.computeSunriseSet(today, JD, JT, jtStep, guiControls.locationLon, guiControls.locationLat);
+    const jtStep = 1e-4;
+    const foo = sunAltitude.computeSunriseSet(today, JD, JT, jtStep, guiControls.locationLon, guiControls.locationLat);
     sunriseTime = foo.rise;
     sunsetTime = foo.set;
 }
@@ -219,7 +216,7 @@ function update()
     }
 
     // Adjust the canvas height according to the body size and the height of the time label.
-    var body = document.getElementsByTagName('body')[0];
+    const body = document.getElementsByTagName('body')[0];
 
     // Update dimensions of the GL and 2d canvases.
     shader.canvasGl.width = document.documentElement.clientWidth;
@@ -228,8 +225,8 @@ function update()
     canvas2d.canvasJs.height = document.documentElement.clientHeight;
 
     // Compute Julian time.
-    var dateNow = new Date();
-    var today = null;
+    let dateNow = new Date();
+    let today = null;
 
     // If date and time updates are disabled, set date manually from the GUI controls:
     if (!guiControls.enableClock)
@@ -314,7 +311,7 @@ function update()
 
     // Compute sidereal time perform modulo to avoid floating point accuracy issues with 32-bit
     // floats in the shader:
-    var LST = TimeConversions.computeSiderealTime(0, JD, JT) % 360.0;
+    const LST = TimeConversions.computeSiderealTime(0, JD, JT) % 360.0;
 
     //console.log("Right Ascension : " + Coordinates.rad2Deg(rA) + " deg ");
     //console.log("Declination     : " + Coordinates.rad2Deg(decl) + " deg");
