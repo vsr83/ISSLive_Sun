@@ -1,3 +1,9 @@
+/**
+ * Methods for parsing trajectory data from Orbit Ephemeris Message (OEM)
+ * obtained from:
+ * https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.txt
+ */
+
 var osvArray = [];
 
 var xmlHTTP = new XMLHttpRequest();
@@ -8,9 +14,7 @@ xmlHTTP.onreadystatechange = function()
 
     if (this.readyState == 4 && this.status == 200)
     {
-        // Parse JSON and initialize World map.
-        //let dataJSON = JSON.parse(this.responseText);
-        //console.log(this.responseText);
+        // Parse OEM file.
         const lines = this.responseText.split("\n");
 
         let started = false;
@@ -47,7 +51,7 @@ xmlHTTP.open("GET", "ISSLive/ISS.OEM_J2K_EPH.txt", true);
 xmlHTTP.send();
 
 
-function getClosesOEMOsv(ts)
+function getClosestOEMOsv(ts)
 {
     let minDelay = 0;
     let closestOsv = null;

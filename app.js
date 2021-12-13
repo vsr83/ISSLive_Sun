@@ -292,7 +292,7 @@ function update()
     }
     else if (guiControls.enableOEM)
     {
-        const osvOem = getClosesOEMOsv(today);
+        const osvOem = getClosestOEMOsv(today);
         ISS.osv = osvOem;
 
         osvControls.osvMonth.setValue(ISS.osv.ts.getMonth() + 1);
