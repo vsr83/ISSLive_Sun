@@ -24,6 +24,12 @@ ISS.osvIn.r = [-4228282.012, 4080666.827, -3421191.697];
 ISS.osvIn.v = [-1904.50887, -5821.53009, -4594.77013];
 ISS.osvIn.ts = new Date("November 20, 2021 19:28:04");
 
+var osvOut = {};
+osvOut.r = [-4228282.012, 4080666.827, -3421191.697];
+osvOut.v = [-1904.50887, -5821.53009, -4594.77013];
+osvOut.ts = new Date("November 20, 2021 19:28:04");
+osvOut.numLoaded = 0;
+
 const sub = new Subscription("MERGE",["USLAB000032", "USLAB000033", "USLAB000034", 
 "USLAB000035", "USLAB000036", "USLAB000037"], ["TimeStamp","Value"]);
 
@@ -45,31 +51,61 @@ onUnsubscription: function()
 onItemUpdate: function(update) 
 {
     console.log(update.getItemName() + ": " + update.getValue("Value"))
-    //fs.appendFile(update.getItemName()+".txt", update.getValue("TimeStamp") + " " + update.getValue("Value") + " " \n");
+
+    let ts = TimeConversions.timeStampToDate(update.getValue("TimeStamp"));
+    if (ts.getTime() !== osvOut.ts.getTime())
+    {
+        osvOut.numLoaded = 0;
+        osvOut.ts = ts;
+    }
+
     if (update.getItemName() == "USLAB000032")
     {
-        ISS.osvIn.r[0] = parseFloat(update.getValue("Value")) * 1000.0;
-        ISS.osvIn.ts = TimeConversions.timeStampToDate(update.getValue("TimeStamp"));
+        osvOut.r[0] = parseFloat(update.getValue("Value")) * 1000.0;
+        osvOut.numLoaded++;
     }
     if (update.getItemName() == "USLAB000033")
     {
-        ISS.osvIn.r[1] = parseFloat(update.getValue("Value")) * 1000.0;
+        osvOut.r[1] = parseFloat(update.getValue("Value")) * 1000.0;
+        osvOut.numLoaded++;
     }
     if (update.getItemName() == "USLAB000034")
     {
-        ISS.osvIn.r[2] = parseFloat(update.getValue("Value")) * 1000.0;
+        osvOut.r[2] = parseFloat(update.getValue("Value")) * 1000.0;
+        osvOut.numLoaded++;
     }
     if (update.getItemName() == "USLAB000035")
     {
-        ISS.osvIn.v[0] = parseFloat(update.getValue("Value"));
+        osvOut.v[0] = parseFloat(update.getValue("Value"));
+        osvOut.numLoaded++;
     }
     if (update.getItemName() == "USLAB000036")
     {
-        ISS.osvIn.v[1] = parseFloat(update.getValue("Value"));
+        osvOut.v[1] = parseFloat(update.getValue("Value"));
+        osvOut.numLoaded++;
     }
     if (update.getItemName() == "USLAB000037")
     {
-        ISS.osvIn.v[2] = parseFloat(update.getValue("Value"));
+        osvOut.v[2] = parseFloat(update.getValue("Value"));
+        osvOut.numLoaded++;
+    }
+
+    const invalidPosition = MathUtils.norm(osvOut.r) == 0.0;
+    const invalidVelocity = MathUtils.norm(osvOut.v) == 0.0;
+
+    //console.log(osvOut.numLoaded);
+    if (osvOut.numLoaded == 6)
+    {
+        if (!invalidPosition && !invalidVelocity)
+        {
+            ISS.osvIn.ts = osvOut.ts;
+            ISS.osvIn.r = osvOut.r;
+            ISS.osvIn.v = osvOut.v;
+        }
+        else
+        {
+            console.log("Invalid telemetry. Ignoring.");
+        }
     }
 }
 });
