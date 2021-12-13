@@ -290,6 +290,23 @@ function update()
         osvControls.osvVy.setValue(ISS.osv.v[1]);
         osvControls.osvVz.setValue(ISS.osv.v[2]);
     }
+    else if (guiControls.enableOEM)
+    {
+        const osvOem = getClosesOEMOsv(today);
+        ISS.osv = osvOem;
+
+        osvControls.osvMonth.setValue(ISS.osv.ts.getMonth() + 1);
+        osvControls.osvDay.setValue(ISS.osv.ts.getDate());
+        osvControls.osvHour.setValue(ISS.osv.ts.getHours());
+        osvControls.osvMinute.setValue(ISS.osv.ts.getMinutes());
+        osvControls.osvSecond.setValue(ISS.osv.ts.getSeconds());
+        osvControls.osvX.setValue(ISS.osv.r[0] * 0.001);
+        osvControls.osvY.setValue(ISS.osv.r[1] * 0.001);
+        osvControls.osvZ.setValue(ISS.osv.r[2] * 0.001);
+        osvControls.osvVx.setValue(ISS.osv.v[0]);
+        osvControls.osvVy.setValue(ISS.osv.v[1]);
+        osvControls.osvVz.setValue(ISS.osv.v[2]);
+    }
     else
     {
         // Set telemetry from UI controls.

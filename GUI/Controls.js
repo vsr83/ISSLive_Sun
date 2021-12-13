@@ -58,6 +58,7 @@ function createControls()
         this.timeWarp = false;
  
         this.enableTelemetry = true;
+        this.enableOEM = false;
         this.enableClock = true;
         this.osvYear = 2021;
         this.osvMonth = 11;
@@ -197,6 +198,7 @@ function createControls()
  
     const dataFolder = gui.addFolder('Source');
     osvControls.enableTelemetry = dataFolder.add(guiControls, 'enableTelemetry').onChange(requestFrame);
+    osvControls.enableOEM = dataFolder.add(guiControls, 'enableOEM').onChange(requestFrame);
     osvControls.enableClock = dataFolder.add(guiControls, 'enableClock').onChange(requestFrame);
     osvControls.osvYear = dataFolder.add(guiControls, 'osvYear', 1980, 2040, 1).onChange(requestFrame);
     osvControls.osvMonth = dataFolder.add(guiControls, 'osvMonth', 1, 12, 1).onChange(requestFrame);
