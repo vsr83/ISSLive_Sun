@@ -8,19 +8,21 @@ var Frames = {};
  * 
  * @param {*} osv_J2000
  *      OSV in J2000 frame. 
+ * @param {*} nutPar
+ *      Nutation parameters.
  * @returns OSV in ECEF frame.
  */
-Frames.osvJ2000ToECEF = function(osv_J2000)
+Frames.osvJ2000ToECEF = function(osv_J2000, nutPar)
 {
     const julian = TimeConversions.computeJulianTime(osv_J2000.ts);
 
-    const osv_CEP = Frames.osvJ2000ToCEP(osv_J2000);
+    const osv_CEP = Frames.osvJ2000ToCEP(osv_J2000, nutPar);
     const rCEP = osv_CEP.r;
     const vCEP = osv_CEP.v;
 
     const osv_ECEF = {};
 
-    const LST = TimeConversions.computeSiderealTime(0, julian.JD, julian.JT);
+    const LST = TimeConversions.computeSiderealTime(0, julian.JD, julian.JT, nutPar);
 
     // Apply the Earth Rotation Matrix (A.32):
     osv_ECEF.r = MathUtils.rotZ(rCEP, -LST);
