@@ -69,7 +69,7 @@ class SunAltitude
         const eclipticAngle = Coordinates.deg2Rad(23.43688);
 
         const rEquatorial_J2000 = Coordinates.rotateCartX(rRelative, eclipticAngle);
-        const rEquatorial_CEP = Frames.posJ2000ToCEP(JT, rEquatorial_J2000);
+        const rEquatorial_CEP = Frames.posJ2000ToCEP(JT, rEquatorial_J2000, null);
 
         const equitorialSph = Coordinates.cartToSpherical(rEquatorial_CEP);
 

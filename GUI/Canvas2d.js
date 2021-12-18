@@ -84,6 +84,12 @@ class Canvas2d
         let lonPrev = 0;
 
         const jdStep = period / 1000;
+
+        // Compute nutation parameters.
+        const julian = TimeConversions.computeJulianTime(today);
+        const T = (julian.JT - 2451545.0)/36525.0;
+        const nutPar = Nutation.nutationTerms(T);
+
         for (let jdDelta = 0; jdDelta < period; jdDelta += jdStep)
         {
             const deltaDate = new Date(today.getTime() +  1000 * jdDelta);
@@ -91,7 +97,7 @@ class Canvas2d
             const osvProp = Kepler.propagate(kepler, deltaDate);
             const kepler_updated = Kepler.osvToKepler(osvProp.r, osvProp.v, osvProp.ts);
         
-            const osv_ECEF = Frames.osvJ2000ToECEF(osvProp);
+            const osv_ECEF = Frames.osvJ2000ToECEF(osvProp, nutPar);
             const r_ECEF = osv_ECEF.r;
             const lon = MathUtils.atan2d(r_ECEF[1], r_ECEF[0]);
             const lat = MathUtils.rad2Deg(Math.asin(r_ECEF[2] / MathUtils.norm(r_ECEF)));
@@ -130,7 +136,7 @@ class Canvas2d
             const osvProp = Kepler.propagate(kepler, deltaDate);
             const kepler_updated = Kepler.osvToKepler(osvProp.r, osvProp.v, osvProp.ts);
         
-            const osv_ECEF = Frames.osvJ2000ToECEF(osvProp);
+            const osv_ECEF = Frames.osvJ2000ToECEF(osvProp, nutPar);
             const r_ECEF = osv_ECEF.r;
             const lon = MathUtils.atan2d(r_ECEF[1], r_ECEF[0]);
             const lat = MathUtils.rad2Deg(Math.asin(r_ECEF[2] / MathUtils.norm(r_ECEF)));
@@ -222,7 +228,7 @@ class Canvas2d
         this.contextJs.fillText(caption, x + 10 - captionShift, y - 10);
 
         // Draw Sun path.
-        for (let jdDelta = -1.0; jdDelta < 1.0; jdDelta += 0.01)
+        for (let jdDelta = -1.0; jdDelta < 1.0; jdDelta += 0.1)
         {
             lonlat = sunAltitude.computeSunLonLat(rA, decl, JD, JT + jdDelta);
 

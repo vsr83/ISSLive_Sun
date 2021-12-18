@@ -59,9 +59,11 @@ Frames.osvJ2000ToECEF = function(osv_J2000)
  * 
  * @param {*} osv_J2000
  *      OSV in J2000 frame. 
+ * @param {*} nutPar
+ *      Nutation parameters.
  * @returns OSV in ECEF frame.
  */
-Frames.osvJ2000ToCEP = function(osv_J2000)
+Frames.osvJ2000ToCEP = function(osv_J2000, nutPar)
 {
     const julian = TimeConversions.computeJulianTime(osv_J2000.ts);
 
@@ -79,7 +81,10 @@ Frames.osvJ2000ToCEP = function(osv_J2000)
     const vMoD = MathUtils.rotZ(MathUtils.rotY(MathUtils.rotZ(osv_J2000.v, zeta), -nu), z);
 
     // Apply the Nutation Matrix (A.24):
-    const nutPar = Nutation.nutationTerms(T);
+    if (nutPar == null)
+    {
+        nutPar = Nutation.nutationTerms(T);
+    }
     const rCEP = MathUtils.rotX(MathUtils.rotZ(MathUtils.rotX(rMoD, -nutPar.eps), nutPar.dpsi), 
             nutPar.eps + nutPar.deps);
     const vCEP = MathUtils.rotX(MathUtils.rotZ(MathUtils.rotX(vMoD, -nutPar.eps), nutPar.dpsi), 
@@ -94,9 +99,11 @@ Frames.osvJ2000ToCEP = function(osv_J2000)
  *     Julian time.
  * @param {*} r 
  *      Position in J2000 coordinates.
+ * @param {*} nutPar
+ *      Nutation parameters.
  * @returns Position in CEP coordinates.
  */
-Frames.posJ2000ToCEP = function(JT, r)
+Frames.posJ2000ToCEP = function(JT, r, nutPar)
 {
     // IAU 1976 Precession Model
     // (ESA GNSS Data Processing Vol.1 - A2.5.1)
@@ -113,7 +120,10 @@ Frames.posJ2000ToCEP = function(JT, r)
     const rMOD = MathUtils.rotZ(MathUtils.rotY(MathUtils.rotZ(rJ2000, zeta), -nu), z);
     
     // Apply the Nutation Matrix (A.24):
-    const nutPar = Nutation.nutationTerms(T);
+    if (nutPar == null)
+    {
+        nutPar = Nutation.nutationTerms(T);
+    }
     const rCEP = MathUtils.rotX(MathUtils.rotZ(MathUtils.rotX(rMOD, -nutPar.eps), nutPar.dpsi), 
             nutPar.eps + nutPar.deps);
         
