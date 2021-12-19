@@ -149,7 +149,7 @@ function updateCaptions(rA, decl, lonlat, rAMoon, declMoon, lonlatMoon, today, J
     {
         let raTime = Coordinates.deg2Time(Coordinates.rad2Deg(rAMoon));
         caption = caption + "Moon RA: " + raTime.h + "h " + raTime.m + "m " + raTime.s + "s (" +
-                Coordinates.rad2Deg(rA).toFixed(5) + "&deg;) <br>";
+                Coordinates.rad2Deg(rAMoon).toFixed(5) + "&deg;) <br>";
     }
     if (guiControls.showMoonDecl)
     {

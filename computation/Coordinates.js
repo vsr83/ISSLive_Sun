@@ -67,6 +67,10 @@ Coordinates.horizontalToEquitorial = (a, A, phi) => {
  * @returns The value in hours, minutes and seconds.
  */
 Coordinates.deg2Time = (deg) => {
+    if (deg < 0)
+    {
+        deg += 360;
+    }
     h = Math.floor(24.0 * deg / 360.0);
     deg -= h * 360.0 / 24.0;
     m = Math.floor(24.0 * 60.0 * deg / 360.0);
